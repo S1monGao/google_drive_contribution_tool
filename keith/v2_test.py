@@ -2,8 +2,7 @@ from __future__ import print_function
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import file, client, tools
-import io
-from googleapiclient.http import MediaIoBaseDownload
+import urllib
 import datetime as dt
 import matplotlib.pyplot as plt
 from classes import User
@@ -23,24 +22,25 @@ def main():
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
-    service = build('drive', 'v3', http=creds.authorize(Http()))
-    results = service.files().list(
-        pageSize=10, fields="nextPageToken, files(id, name)").execute()
-    items = results.get('files', [])
+    service = build('drive', 'v2', http=creds.authorize(Http()))
+
+    # Call the Drive v3 API
+    results = service.files().list().execute()
+    items = results['items']
 
     if not items:
         print('No files found.')
     else:
         for item in items:
-            if item['name'] == "test_non_google_doc":
-                print('{0} ({1})'.format(item['name'], item['id']))
+            if item['title'] == "test_non_google_doc":
+                print('{0} ({1})'.format(item['title'], item['id']))
                 revisions = service.revisions().list(fileId=item['id'], fields="*").execute()
                 users = [] #Will store a list of user class instances
-                for revision in revisions['revisions']:
+                for revision in revisions['items']:
                     print(revision)
                     modifier = revision['lastModifyingUser']
                     modifier_name = modifier['displayName'] #Get the name of the person who made the modification
-                    modified_time = dt.datetime.strptime(revision['modifiedTime'][:-2], '%Y-%m-%dT%H:%M:%S.%f') # convert time of conversion to dt object
+                    modified_time = dt.datetime.strptime(revision['modifiedDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f') # convert time of conversion to dt object
                     modified_time = modified_time + dt.timedelta(hours=10) # Hardcoded conversion to AEST
                     modifier_found = False
                     for user in users:
@@ -61,9 +61,6 @@ def main():
 
 
 def main2():
-    """
-    Prints all the revisions of Test Doc and attempts to download (doesn't work so ignore)
-    """
 
     # Authenticating and creating service
     store = file.Storage('token.json')
@@ -71,35 +68,28 @@ def main2():
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
-    service = build('drive', 'v3', http=creds.authorize(Http()))
+    service = build('drive', 'v2', http=creds.authorize(Http()))
 
     # Call the Drive v3 API
-    results = service.files().list(
-        pageSize=10, fields="nextPageToken, files(id, name)").execute()
-    items = results.get('files', [])
+    results = service.files().list().execute()
+    items = results['items']
 
     if not items:
         print('No files found.')
     else:
         for item in items:
-            if item['name'] == "test_non_google_doc":
-                print('{0} ({1})'.format(item['name'], item['id']))
-                revisions = service.revisions().list(fileId=item['id'], fields="*")
-                revisions = revisions.execute()
-                for revision in revisions['revisions']:
-                    print(revision['id'])
-                    request = service.revisions().get_media(fileId=item['id'], revisionId=revision['id'], acknowledgeAbuse=True)
-                    downloaded = io.BytesIO()
-                    downloader = MediaIoBaseDownload(downloaded, request)
-                    done = False
-                    while done is False:
-                        # _ is a placeholder for a progress object that we ignore.
-                        # (Our file is small, so we skip reporting progress.)
-                        _, done = downloader.next_chunk()
+            if item['title'] == "Test Doc":
+                print('{0} ({1})'.format(item['title'], item['id']))
+                revisions = service.revisions().list(fileId=item['id'], fields="*").execute()
+                for revision in revisions['items']:
+                    revision_object = service.revisions().get(fileId=item['id'], revisionId=revision['id']).execute()
+                    text_link = revision_object['exportLinks']['text/plain']
+                    _, data = service._http.request(text_link)
+                    data = str(data, 'utf-8')
+                    print(data)
+                    print('-------')
 
-                    downloaded.seek(0)
-                    print('Downloaded file contents are: {}'.format(downloaded.read()))
-                    print(revision)
+
                 break
 
 
@@ -162,4 +152,4 @@ def plot_lines(users, start_time, end_time):
     plt.show()
 
 if __name__ == '__main__':
-    main()
+    main2()
