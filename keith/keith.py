@@ -6,25 +6,7 @@ import io
 from googleapiclient.http import MediaIoBaseDownload
 import datetime as dt
 import matplotlib.pyplot as plt
-
-
-class User:
-
-    def __init__(self, name):
-        """
-        :param name: The English name of the user
-        :attribute times: A list of times at which the user made revisions
-        :attribute num_rev: The total number of revisions made by a user
-        """
-        self.name = name
-        self.times = []
-        self.num_rev = 0
-
-    def __str__(self):
-        string_to_return = "--------\n"
-        string_to_return += self.name + "\n"
-        string_to_return += str(self.times)
-        return string_to_return
+from classes import User
 
 
 # If modifying these scopes, delete the file token.json.
@@ -140,10 +122,10 @@ def plot_line_info(user, start_time, end_time, num_sections):
     """
 
     :param user: A User class instance
-    :param start_time: Time at which
-    :param end_time:
-    :param num_sections:
-    :return:
+    :param start_time: Time at which to start measuring changes
+    :param end_time: Time at which to stop measuring changes
+    :param num_sections: The number of 6hr slots between start and end
+    :return: A list containing the number of revisions made by the user in each 6hr interval
     """
     num_revs_list = num_sections * [0]
     current_time = start_time
@@ -159,6 +141,14 @@ def plot_line_info(user, start_time, end_time, num_sections):
 
 
 def plot_lines(users, start_time, end_time):
+    """
+    Plots the line graphs for number of revisions for each user at each time slot
+    :param users: A list of User class instances
+    :param start_time: Time at which to start measuring changes
+    :param end_time: Time at which to stop measuring changes
+    :return: None
+    :postcondition: line graphs for each user's revisions at each time interval are plotted
+    """
     num_sections = int(((end_time - start_time) / dt.timedelta(hours=6) + 1) // 1)
     time_axis = num_sections * [0]
     time_axis[0] = start_time
@@ -166,7 +156,7 @@ def plot_lines(users, start_time, end_time):
         time_axis[i] = start_time + i*dt.timedelta(hours=6)
     for user in users:
         plt.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections))
-    plt.legend([user.name for user in users], loc='upper left')
+    plt.legend([user.name for user in users], loc='upper right')
     plt.show()
 
 if __name__ == '__main__':
