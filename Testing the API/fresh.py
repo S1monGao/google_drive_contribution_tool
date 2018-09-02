@@ -5,8 +5,6 @@ from oauth2client import file, client, tools
 from apiclient import errors
 
 
-
-
 def authenticate():
     store = file.Storage('token.json')
     creds = store.get()
@@ -15,6 +13,7 @@ def authenticate():
         creds = tools.run_flow(flow, store)
     service = build('drive', 'v3', http=creds.authorize(Http()))
     return service
+
 
 def listFiles(service):
     files = service.files().list().execute()
@@ -26,12 +25,17 @@ def getFileInfo(fileName, files):
         if file['name'] == fileName:
             print(file)
 
+
 def main():
     service = authenticate()
     files = listFiles(service)
     # fileName = input("What is the name of the file: ")
     fileName = "LECTURE2.pdf"
     getFileInfo(fileName, files)
+    # print file name for every google doc and sheet
+    for f in files:
+        if "google-apps.document" in f['mimeType'] or "google-apps.spreadsheet" in f['mimeType']:
+            print(f['name'])
 
 
 if __name__ == '__main__':
