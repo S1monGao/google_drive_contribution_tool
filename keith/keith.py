@@ -115,6 +115,7 @@ def plot_pie_chart(users):
     amounts = [user.num_rev for user in users]
     labels = [user.name for user in users]
     plt.pie(amounts, labels=labels)
+    plt.title("Work ratio of users")
     plt.show()
 
 
@@ -157,6 +158,9 @@ def plot_lines(users, start_time, end_time):
     for user in users:
         plt.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections))
     plt.legend([user.name for user in users], loc='upper right')
+    plt.xlabel("Date and hour")
+    plt.ylabel("Number of revisions")
+    plt.title("Revisions for each user at given times")
     plt.show()
 
 if __name__ == '__main__':
