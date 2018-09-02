@@ -64,10 +64,10 @@ def main():
 
 def main2():
     """
-    Prints all the revisions of Test Doc and attempts to download (doesn't work)
+    Prints all the revisions of Test Doc and attempts to download (doesn't work so ignore)
     """
 
-    # Authenticating and cfreating service
+    # Authenticating and creating service
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
