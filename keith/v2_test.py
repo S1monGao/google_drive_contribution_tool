@@ -38,19 +38,18 @@ def main():
                 previous_revision_num_chars = 0
                 for revision in revisions['items']:
                     revision_content = get_revision_content(revision)
-                    num_chars = len(revision_content) - previous_revision_num_chars
+                    num_chars_changed = len(revision_content) - previous_revision_num_chars
                     is_addition = False
-                    if num_chars > 0:
+                    if num_chars_changed > 0:
                         is_addition = True
-                    num_chars = abs(num_chars)
-                    previous_revision_num_chars = len(revision_content)
+                    num_chars_changed = abs(num_chars_changed)
+                    previous_revision_num_chars = len(revision_content) #update so that we later compare next revision to the current one
 
-                    modifier = revision['lastModifyingUser']
-                    modifier_name = modifier['displayName'] #Get the name of the person who made the modification
+                    modifier_name = revision['lastModifyingUser']['displayName'] #Get the name of the person who made the modification
                     modified_time = dt.datetime.strptime(revision['modifiedDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f') # convert time of conversion to dt object
                     modified_time = modified_time + dt.timedelta(hours=10) # Hardcoded conversion to AEST
                     modifier_found = False
-                    revision_object = Revision(num_chars, modified_time, is_addition)
+                    revision_object = Revision(num_chars_changed, modified_time, is_addition)
                     for user in users:
                         if user.name == modifier_name:
                             user.add_revision(revision_object)
@@ -63,6 +62,7 @@ def main():
                 plot_lines(users, start_time, end_time, True)
                 plot_lines(users, start_time, end_time, False)
                 break
+
 
 def get_revision_content(revision):
     text_link = revision['exportLinks']['text/plain']
@@ -112,9 +112,10 @@ def plot_line_info(user, start_time, end_time, num_sections, is_additions):
 def plot_lines(users, start_time, end_time, is_additions):
     """
     Plots the line graphs for number of revisions for each user at each time slot
-    :param users: A list of User class instances
-    :param start_time: Time at which to start measuring changes
-    :param end_time: Time at which to stop measuring changes
+    :param users (List): A list of User class instances
+    :param start_time (Datetime): Time at which to start measuring changes
+    :param end_time (Datetime): Time at which to stop measuring changes
+    :param is_additions (Boolean): Measuring additions or deletions
     :return: None
     :postcondition: line graphs for each user's revisions at each time interval are plotted
     """
