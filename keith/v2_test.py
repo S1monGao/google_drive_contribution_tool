@@ -34,7 +34,7 @@ def main():
             if item['title'] == "Test Doc":
                 print('{0} ({1})'.format(item['title'], item['id']))
                 revisions = service.revisions().list(fileId=item['id'], fields="*").execute()
-                users = [] #Will store a list of user class instances
+                users = []  # Will store a list of user class instances
                 previous_revision_num_chars = 0
                 for revision in revisions['items']:
                     revision_content = get_revision_content(revision)
@@ -43,11 +43,11 @@ def main():
                     if num_chars_changed > 0:
                         is_addition = True
                     num_chars_changed = abs(num_chars_changed)
-                    previous_revision_num_chars = len(revision_content) #update so that we later compare next revision to the current one
+                    previous_revision_num_chars = len(revision_content)  # update so that we later compare next revision to the current one
 
-                    modifier_name = revision['lastModifyingUser']['displayName'] #Get the name of the person who made the modification
-                    modified_time = dt.datetime.strptime(revision['modifiedDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f') # convert time of conversion to dt object
-                    modified_time = modified_time + dt.timedelta(hours=10) # Hardcoded conversion to AEST
+                    modifier_name = revision['lastModifyingUser']['displayName']  # Get the name of the person who made the modification
+                    modified_time = dt.datetime.strptime(revision['modifiedDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f')  # convert time of conversion to dt object
+                    modified_time = modified_time + dt.timedelta(hours=10)  # Hardcoded conversion to AEST
                     modifier_found = False
                     revision_object = Revision(num_chars_changed, modified_time, is_addition)
                     for user in users:
@@ -134,6 +134,7 @@ def plot_lines(users, start_time, end_time, is_additions):
     else:
         plt.title("Number of characters deleted by each user at given times")
     plt.show()
+
 
 if __name__ == '__main__':
     main()
