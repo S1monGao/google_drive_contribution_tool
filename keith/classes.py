@@ -40,6 +40,12 @@ class User_v2:
 class Revision:
 
     def __init__(self, num_chars, time, is_add=True):
+        """
+
+        :param num_chars (Integer): Number of characters in the revision
+        :param time (Datetime): Time at which revision was made
+        :param is_add (Boolean): Whether revision was an addition or deletion
+        """
         self.num_chars = num_chars
         self.time = time
         self.is_add = is_add

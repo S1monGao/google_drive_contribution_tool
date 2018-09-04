@@ -78,7 +78,7 @@ def plot_pie_chart(users):
     :return: None
     :postcondition: pie chart for number of revisions per user will be plotted
     """
-    amounts = [user.num_added - user.num_deleted for user in users]
+    amounts = [user.num_added - user.num_deleted for user in users] #subtracting so that we get net change
     labels = [user.name for user in users]
     plt.pie(amounts, labels=labels)
     plt.title("Work ratio of users")
