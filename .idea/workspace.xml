@@ -2,10 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9fb7f0be-1b54-4849-83ee-30e94aa6906e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Testing the API/ActivityTesting.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testing the API/fresh.py" beforeDir="false" afterPath="$PROJECT_DIR$/Testing the API/fresh.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/Michael/token.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/classes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/credentials.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/token.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/v2_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Inception Deck.pptx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing the API/ActivityTesting.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/Michael/ActivityTesting.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing the API/credentials.json" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/Michael/credentials.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing the API/credentials1.json" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/Michael/credentials1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing the API/fresh.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/Michael/fresh.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing the API/token.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tutor Email.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tutor Requirements.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/.idea/google_docs_api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/.idea/google_docs_api.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Product/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/credentials.json" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Product/credentials.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/keith.py" beforeDir="false" afterPath="$PROJECT_DIR$/Sprint 1/Testing the API/keith/keith.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/token.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/keith/v2_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vision_statement.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/~$sion_statement.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/~$tor Requirements.docx" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,48 +40,77 @@
     <session id="-2043018812">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.open.time.4" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="json" value="1" />
           <entry key="md" value="2" />
-          <entry key="py" value="5" />
+          <entry key="py" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="1" />
           <entry key="Markdown" value="2" />
-          <entry key="Python" value="5" />
+          <entry key="Python" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="md" value="4" />
-          <entry key="py" value="721" />
+          <entry key="py" value="1771" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Markdown" value="4" />
-          <entry key="Python" value="721" />
+          <entry key="Python" value="1771" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Testing the API/fresh.py">
+        <entry file="file://$PROJECT_DIR$/Sprint 1/Testing the API/keith/v2_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="54" column="28" lean-forward="true" selection-start-line="54" selection-start-column="28" selection-end-line="54" selection-end-column="28" />
+            <state relative-caret-position="598">
+              <caret line="69" column="29" lean-forward="true" selection-start-line="69" selection-start-column="29" selection-end-line="69" selection-end-column="29" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-                <element signature="e#625#1053#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Sprint 1/Product/weShowedUp.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="332">
+              <caret line="93" column="81" lean-forward="true" selection-start-line="93" selection-start-column="81" selection-end-line="93" selection-end-column="81" />
+              <folding>
+                <element signature="e#128#165#0" expanded="true" />
+                <element signature="e#397#818#0" />
+                <element signature="e#1130#1700#0" />
+                <element signature="e#1755#1866#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Sprint 1/Testing the API/Michael/fresh.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="149">
+              <caret line="37" selection-start-line="37" selection-end-line="41" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+                <element signature="e#180#594#0" />
               </folding>
             </state>
           </provider>
@@ -73,6 +125,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>id</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -81,7 +138,10 @@
       <list>
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/Testing the API/ActivityTesting.py" />
+        <option value="$PROJECT_DIR$/keith/v2_test.py" />
         <option value="$PROJECT_DIR$/Testing the API/fresh.py" />
+        <option value="$PROJECT_DIR$/Sprint 1/Testing the API/keith/v2_test.py" />
+        <option value="$PROJECT_DIR$/Sprint 1/Product/weShowedUp.py" />
       </list>
     </option>
   </component>
@@ -121,12 +181,33 @@
             <path>
               <item name="my-awesome-project" type="b2602c69:ProjectViewProjectNode" />
               <item name="my-awesome-project" type="462c0819:PsiDirectoryNode" />
+              <item name="Sprint 1" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="my-awesome-project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="my-awesome-project" type="462c0819:PsiDirectoryNode" />
+              <item name="Sprint 1" type="462c0819:PsiDirectoryNode" />
+              <item name="Product" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="my-awesome-project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="my-awesome-project" type="462c0819:PsiDirectoryNode" />
+              <item name="Sprint 1" type="462c0819:PsiDirectoryNode" />
+              <item name="Testing the API" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="my-awesome-project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="my-awesome-project" type="462c0819:PsiDirectoryNode" />
+              <item name="Sprint 1" type="462c0819:PsiDirectoryNode" />
+              <item name="Testing the API" type="462c0819:PsiDirectoryNode" />
               <item name="keith" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="my-awesome-project" type="b2602c69:ProjectViewProjectNode" />
               <item name="my-awesome-project" type="462c0819:PsiDirectoryNode" />
+              <item name="Sprint 1" type="462c0819:PsiDirectoryNode" />
               <item name="Testing the API" type="462c0819:PsiDirectoryNode" />
+              <item name="Michael" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -137,6 +218,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Sprint 1/Product" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -150,8 +236,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.fresh">
-    <configuration name="ActivityTesting" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.weShowedUp">
+    <configuration name="fresh (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="my-awesome-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -159,11 +245,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Testing the API" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Sprint 1/Testing the API/Michael" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Testing the API/ActivityTesting.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Sprint 1/Testing the API/Michael/fresh.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -193,7 +279,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="keith" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="v2_test (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="my-awesome-project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Sprint 1/Testing the API/keith" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Sprint 1/Testing the API/keith/v2_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="v2_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="my-awesome-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -205,7 +312,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/keith/keith.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/keith/v2_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="weShowedUp" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="my-awesome-project" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Sprint 1/Product" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Sprint 1/Product/weShowedUp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -215,15 +343,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.keith" />
       <item itemvalue="Python.fresh" />
-      <item itemvalue="Python.ActivityTesting" />
+      <item itemvalue="Python.v2_test" />
+      <item itemvalue="Python.v2_test (1)" />
+      <item itemvalue="Python.fresh (1)" />
+      <item itemvalue="Python.weShowedUp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.weShowedUp" />
+        <item itemvalue="Python.v2_test (1)" />
+        <item itemvalue="Python.fresh (1)" />
         <item itemvalue="Python.fresh" />
-        <item itemvalue="Python.ActivityTesting" />
-        <item itemvalue="Python.keith" />
+        <item itemvalue="Python.v2_test" />
       </list>
     </recent_temporary>
   </component>
@@ -242,22 +374,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24947146" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" weight="0.32891566" />
-      <window_info anchor="bottom" id="Python Console" weight="0.32891566" />
-      <window_info anchor="bottom" id="Terminal" weight="0.32891566" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29036143" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.14578313" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32891566" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32891566" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32891566" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -294,31 +425,66 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
           <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/keith/keith.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="93" lean-forward="true" selection-start-line="36" selection-start-column="16" selection-end-line="36" selection-end-column="93" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-            <element signature="e#4916#5649#0" />
-            <element signature="e#5701#6638#0" />
-          </folding>
+        <state relative-caret-position="-564">
+          <caret line="9" lean-forward="true" selection-start-line="36" selection-start-column="16" selection-end-line="36" selection-end-column="93" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Testing the API/fresh.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="54" column="28" lean-forward="true" selection-start-line="54" selection-start-column="28" selection-end-line="54" selection-end-column="28" />
+        <state relative-caret-position="603">
+          <caret line="55" selection-start-line="55" selection-end-line="55" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
-            <element signature="e#625#1053#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/keith/v2_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="50" column="42" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sprint 1/Testing the API/Michael/fresh.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="37" selection-start-line="37" selection-end-line="41" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <element signature="e#180#594#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sprint 1/Product/classes.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sprint 1/Product/weShowedUp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="93" column="81" lean-forward="true" selection-start-line="93" selection-start-column="81" selection-end-line="93" selection-end-column="81" />
+          <folding>
+            <element signature="e#128#165#0" expanded="true" />
+            <element signature="e#397#818#0" />
+            <element signature="e#1130#1700#0" />
+            <element signature="e#1755#1866#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sprint 1/Testing the API/keith/v2_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="598">
+          <caret line="69" column="29" lean-forward="true" selection-start-line="69" selection-start-column="29" selection-end-line="69" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
