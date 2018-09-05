@@ -9,7 +9,7 @@ Keith Pang
 Glyn Kendall
 Josh De Luca
 Michael Oren
-Simon XXXXXXXXX
+Simon Gao
 
 """
 
@@ -35,6 +35,7 @@ def Menu():
             print('HELP\n\'v:<FILE_NAME>\': Graph revision changes for the file specified\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
         else:
             print("Invalid command, please try again\n")
+    exit(0)
         # elif inp == 'pie chart':
         #     print('print pie chart of team contributions here')
         # elif inp == 'timeline':
