@@ -23,7 +23,7 @@ service = build('drive', 'v2', http=creds.authorize(Http()))
 
 def main():
 
-    # Call the Drive v3 API
+    # Call the Drive v2 API
     results = service.files().list().execute()
     items = results['items']
 
