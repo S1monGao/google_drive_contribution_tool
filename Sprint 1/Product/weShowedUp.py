@@ -134,7 +134,7 @@ def handleRevisionData(revisions, service):
             new_user.add_revision(revision_object)
             users.append(new_user)
 
-        return users
+    return users
 
 def plot_pie_chart(users):
     """
