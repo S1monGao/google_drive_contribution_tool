@@ -6,7 +6,7 @@ Sprint 1
 
 04/09/18
 Keith Pang
-Glyn XXXXXXX
+Glyn Kendall
 Josh De Luca
 Michael Oren
 Simon XXXXXXXXX
@@ -118,7 +118,7 @@ def handleRevisionData(revisions, service):
         # convert time of conversion to dt object
         modified_time = dt.datetime.strptime(revision['modifiedDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f')
         # Hardcoded conversion to AEST
-        modified_time = modified_time + dt.timedelta(hours=10)  # Hardcoded conversion to AEST
+        modified_time = modified_time + dt.timedelta(hours=10)
 
 
         modifier_found = False
