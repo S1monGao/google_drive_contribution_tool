@@ -22,26 +22,29 @@ import matplotlib.pyplot as plt
 from classes import User_v2, Revision
 def Menu():
     quit = False
-    print('HELP\n\'choose file\': Choose the file or folder to view\n\'pie chart\': Prints pie chart of percentage contributions\n\'timeline\': Prints timelines of all group members between specified start and end points\n\'changes\': Prints changes made by all group members between specified start and end points\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
+    # print('HELP\n\'choose file\': Choose the file or folder to view\n\'pie chart\': Prints pie chart of percentage contributions\n\'timeline\': Prints timelines of all group members between specified start and end points\n\'changes\': Prints changes made by all group members between specified start and end points\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
+    print('HELP\n\'v:<FILE_NAME>\': Graph revision changes for the file specified\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
 
     while not quit:
-        inp=input('Please choose a command: ')a
-        if inp=='quit':
-            quit=True
-        elif inp == 'choose file':
-            print('choose a file here')
-        elif inp=='help':
-            print('HELP\n\'choose file\': Choose the file or folder to view\n\'pie chart\': Prints pie chart of percentage contributions\n\'timeline\': Prints timelines of all group members between specified start and end points\n\'changes\': Prints changes made by all group members between specified start and end points\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
-        elif inp == 'pie chart':
-            print('print pie chart of team contributions here')
-        elif inp == 'timeline':
-            lowerBnd=input("Please choose date for start of timeline (dd/mm/yyyy): ")
-            upperBnd = input("Please choose date for end of timeline (dd/mm/yyyy): ")
-            print(lowerBnd,'<-------------->',upperBnd)
-        elif inp == 'changes':
-            lowerBnd = input("Please choose date for start of changes (dd/mm/yyyy): ")
-            upperBnd = input("Please choose date for end of changes (dd/mm/yyyy): ")
-            print('print changes here')
+        inp=input('Please choose a command: ')
+        if inp == 'quit':
+            quit = True
+        elif inp.split(":")[0] == "v":
+            main(inp.split(":")[1])
+        elif inp == 'help':
+            print('HELP\n\'v:<FILE_NAME>\': Graph revision changes for the file specified\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
+        else:
+            print("Invalid command, please try again\n")
+        # elif inp == 'pie chart':
+        #     print('print pie chart of team contributions here')
+        # elif inp == 'timeline':
+        #     lowerBnd=input("Please choose date for start of timeline (dd/mm/yyyy): ")
+        #     upperBnd = input("Please choose date for end of timeline (dd/mm/yyyy): ")
+        #     print(lowerBnd,'<-------------->',upperBnd)
+        # elif inp == 'changes':
+        #     lowerBnd = input("Please choose date for start of changes (dd/mm/yyyy): ")
+        #     upperBnd = input("Please choose date for end of changes (dd/mm/yyyy): ")
+        #     print('print changes here')
 
 
 def authenticate():
@@ -64,13 +67,13 @@ def authenticate():
 def getDocsNSheets(service):
     """
     Gets all the files in the google drive that are google docs or sheets and returns a list of them
-    It only searches the first 1000 files
+    It only searches the first 200 files
     :param service: Google Drive rest API service
     :return: a list of file metadata objects that are either Google docs or sheets
 
     """
 
-    items = service.files().list(maxResults=1000).execute()
+    items = service.files().list(maxResults=200).execute()
     tmp = []
     # print file name for every google doc and sheet
     for f in items['items']:
@@ -90,6 +93,8 @@ def getFileInfo(fileName, files):
         if file['title'] == fileName:
             # print(file)
             return file
+    print("Invalid file name, please try again")
+    return False
 
 def get_revision_content(revision, service):
     """
@@ -156,7 +161,6 @@ def handleRevisionData(revisions, service):
             new_user = User_v2(name=modifier_name)
             new_user.add_revision(revision_object)
             users.append(new_user)
-
     return users
 
 def plot_pie_chart(users):
@@ -226,15 +230,15 @@ def graphData(users, start_time, end_time):
     plot_lines(users, start_time, end_time, True)
     plot_lines(users, start_time, end_time, False)
 
-def main():
+def main(fileName):
     service = authenticate()
     files = getDocsNSheets(service)
 
-
     # fileName = input("Enter the filename: ")
-    fileName = "Test Doc"
+    # fileName = "Test Doc"
     file = getFileInfo(fileName, files)
-    print(file['title'])
+    if not file:
+        return
     revisions = getRevisions(file, service)
     users = handleRevisionData(revisions, service)
 
@@ -246,4 +250,5 @@ def main():
     graphData(users, start_time, end_time)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    Menu()
