@@ -1,0 +1,3 @@
+V2 Changes
+Edited Definition of Done to change all team mebers must check changes to 2 members will check changes.
+Made it more clear in Defintion of Done what responsibilities of QA were in regards to testing.
