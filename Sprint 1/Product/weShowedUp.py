@@ -20,6 +20,29 @@ from oauth2client import file, client, tools
 import datetime as dt
 import matplotlib.pyplot as plt
 from classes import User_v2, Revision
+def Menu():
+    quit = False
+    print('HELP\n\'choose file\': Choose the file or folder to view\n\'pie chart\': Prints pie chart of percentage contributions\n\'timeline\': Prints timelines of all group members between specified start and end points\n\'changes\': Prints changes made by all group members between specified start and end points\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
+
+    while not quit:
+        inp=input('Please choose a command: ')a
+        if inp=='quit':
+            quit=True
+        elif inp == 'choose file':
+            print('choose a file here')
+        elif inp=='help':
+            print('HELP\n\'choose file\': Choose the file or folder to view\n\'pie chart\': Prints pie chart of percentage contributions\n\'timeline\': Prints timelines of all group members between specified start and end points\n\'changes\': Prints changes made by all group members between specified start and end points\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
+        elif inp == 'pie chart':
+            print('print pie chart of team contributions here')
+        elif inp == 'timeline':
+            lowerBnd=input("Please choose date for start of timeline (dd/mm/yyyy): ")
+            upperBnd = input("Please choose date for end of timeline (dd/mm/yyyy): ")
+            print(lowerBnd,'<-------------->',upperBnd)
+        elif inp == 'changes':
+            lowerBnd = input("Please choose date for start of changes (dd/mm/yyyy): ")
+            upperBnd = input("Please choose date for end of changes (dd/mm/yyyy): ")
+            print('print changes here')
+
 
 def authenticate():
     """
