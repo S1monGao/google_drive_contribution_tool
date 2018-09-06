@@ -1,3 +1,5 @@
 V2 Changes
 Edited Definition of Done to change all team mebers must check changes to 2 members will check changes.
 Made it more clear in Defintion of Done what responsibilities of QA were in regards to testing.
+V3 Changes
+Edited DOD to make it possible for graphs to pass the DOD
