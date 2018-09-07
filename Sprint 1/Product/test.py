@@ -20,12 +20,13 @@ class TestDocs(unittest.TestCase):
         file = weShowedUp.getFileInfo('unit_Test_Doc', files)
         revisions = weShowedUp.getRevisions(file, service)
         users = weShowedUp.handleRevisionData(revisions, service)
+        #Known editors are checked against editors returned by the program
         #unit_Test_Doc was edited by Josh then Keith then Glyn
         self.assertEqual(len(users),3)
         self.assertEqual(users[0].name, 'Josh De')
         self.assertEqual(users[1].name, 'Keith Pang')
         self.assertEqual(users[2].name, 'Glyn Kendall')
-        #this is currently not being passed because our code combines everyones contributions to josh and does not record the other editors
+        #this is currently not being passed because our code combines everyone's contributions to josh and does not record the other editors
 
 
     def test_Contribution(self):
@@ -36,12 +37,14 @@ class TestDocs(unittest.TestCase):
         file = weShowedUp.getFileInfo('unit_Test_Doc', files)
         revisions = weShowedUp.getRevisions(file, service)
         users = weShowedUp.handleRevisionData(revisions, service)
+        #Takes known additions/Deletions and tests to see if the program can correctly distinguish them
         #Josh added 20 and deleted 10, keith added 10 and glyn added 10
         self.assertEqual(users[0].num_added, 20)
         self.assertEqual(users[0].num_deleted, 10)
         self.assertEqual(users[1].num_added, 10)
         self.assertEqual(users[2].num_added, 10)
         #This is not currently passed as the program states josh added 30 and deleted none and no one else edited the file
+
 
 
 def testGraphs():
@@ -62,15 +65,15 @@ def testGraphs():
     users[3] = User_v2('Michael')
     users[3].add_revision(Revision(25, dt.datetime(2018, 10, 13, 11, 59, 0), False))
 
-    #shows pie graph where all users have positive total revisions, piegraph is as expected and passes test
+    #shows pie graph where all users have positive total revisions, pie graph is as expected and passes test
     weShowedUp.plot_pie_chart(users[0:3])
 
-    #shows graph where one editor has more deletions than aditions
+    #shows graph where one editor has more deletions than additions
     #its not possible to have a pie graph with negative proportion so the display is wonky
     #in the next sprint we are seperating pie graph into 2: 1 for additions and 1 for deletions
     weShowedUp.plot_pie_chart(users)
 
-    #plots the adition and deletion line graphs, these are as expected and pass the test
+    #plots the addition and deletion line graphs, these are as expected and pass the test
     weShowedUp.plot_lines(users, dt.datetime(2018, 9, 4, 11, 54, 0), dt.datetime(2018, 10, 14, 11, 59, 0), True)
     weShowedUp.plot_lines(users, dt.datetime(2018, 9, 4, 11, 54, 0), dt.datetime(2018, 10, 14, 11, 59, 0), False)
 
