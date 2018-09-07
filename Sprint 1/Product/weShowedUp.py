@@ -245,7 +245,7 @@ def main(fileName):
 
     # getting time of file creation and adding 10 hrs to convert to AEST
     start_time = dt.datetime.strptime(file['createdDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f')
-    start_time = start_time + dt.timedelta(hours=10)
+    start_time = start_time + dt.timedelta(hours=4)
 
     end_time = dt.datetime.now()
     graphData(users, start_time, end_time)

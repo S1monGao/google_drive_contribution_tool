@@ -10,8 +10,35 @@ import unittest
 import weShowedUp
 
 
-#class TestGraphs(unittest.TestCase):
-#    def test_pieGraph(self):
+class TestDocs(unittest.TestCase):
+    '''
+    def test_Names(self):
+        service = weShowedUp.authenticate()
+        files = weShowedUp.getDocsNSheets(service)
+
+        file = weShowedUp.getFileInfo('unit_Test_Doc', files)
+        revisions = weShowedUp.getRevisions(file, service)
+        users = weShowedUp.handleRevisionData(revisions, service)
+
+        self.assertEqual(len(users),3)
+        self.assertEqual(users[0].name, 'Josh De')
+        self.assertEqual(users[1].name, 'Keith Pang')
+        self.assertEqual(users[2].name, 'Glyn Kendall')
+    '''
+    def test_Contribution(self):
+        service = weShowedUp.authenticate()
+        files = weShowedUp.getDocsNSheets(service)
+
+        file = weShowedUp.getFileInfo('unit_Test_Doc', files)
+        revisions = weShowedUp.getRevisions(file, service)
+        users = weShowedUp.handleRevisionData(revisions, service)
+
+        self.assertEqual(users[0].num_added, 20)
+        self.assertEqual(users[0].num_deleted, 10)
+        self.assertEqual(users[1].num_added, 10)
+        self.assertEqual(users[2].num_added, 10)
+
+
 
 def testGraphs():
     users=[0,0,0,0]
@@ -37,4 +64,8 @@ def testGraphs():
     weShowedUp.plot_lines(users, dt.datetime(2018, 9, 4, 11, 54, 0), dt.datetime(2018, 10, 14, 11, 59, 0), True)
     weShowedUp.plot_lines(users, dt.datetime(2018, 9, 4, 11, 54, 0), dt.datetime(2018, 10, 14, 11, 59, 0), False)
 
-testGraphs()
+
+
+if __name__ == '__main__':
+    # testGraphs()
+    unittest.main()
