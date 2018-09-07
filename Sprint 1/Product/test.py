@@ -11,7 +11,7 @@ import weShowedUp
 
 
 class TestDocs(unittest.TestCase):
-    '''
+
     def test_Names(self):
         service = weShowedUp.authenticate()
         files = weShowedUp.getDocsNSheets(service)
@@ -24,7 +24,7 @@ class TestDocs(unittest.TestCase):
         self.assertEqual(users[0].name, 'Josh De')
         self.assertEqual(users[1].name, 'Keith Pang')
         self.assertEqual(users[2].name, 'Glyn Kendall')
-    '''
+
     def test_Contribution(self):
         service = weShowedUp.authenticate()
         files = weShowedUp.getDocsNSheets(service)
