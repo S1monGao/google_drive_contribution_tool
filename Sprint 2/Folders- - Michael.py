@@ -29,40 +29,34 @@ def listFiles(service):
     tmp = []
     # print file name for every google doc and sheet
     for f in files['items']:
-        if "google-apps.document" in f['mimeType'] or "google-apps.spreadsheet" in f['mimeType'] or "":
+        if "google-apps.document" in f['mimeType'] or "google-apps.spreadsheet" in f['mimeType'] or "folder" in f['mimeType']:
             tmp.append(f)
-
     return tmp
 
 
 def getFileInfo(fileName, files):
     for file in files:
         if file['title'] == fileName:
-            # print(file)
             return file['id'], file
 
 def getNameFromId(fileId, service):
     return service.files().get(fileId=fileId).execute()['title']
 
+def getFile(fileId, service):
+    return service.files().get(fileId=fileId).execute()
 
-def getFolders(service):
-    files = service.files().list(maxResults=1000).execute()
-    folders = []
+def getFilesInFolder(folder, list, service):
+    filesInFolder = service.children().list(folderId=folder['id'], maxResults=1000).execute()
+    if filesInFolder['items']:
+        for f in filesInFolder['items']:
+            tmp = getFile(f['id'], service)
+            if "folder" in tmp['mimeType']:
+                getFilesInFolder(tmp, list, service)
+            elif "google-apps.document" in tmp['mimeType'] or "google-apps.spreadsheet" in tmp['mimeType']:
+                list.append([getNameFromId(tmp['id'], service), tmp['id']])
+    else:
+        list.append([getNameFromId(folder['id'], service), folder['id']])
 
-    for f in files['items']:
-        if "folder" in f['mimeType']:
-            folders.append(f)
-
-    return folders
-
-def getFilesInFolder(folderName, folders, list, service):
-
-    for folder in folders:
-        if folder['title'] == folderName:
-            filesInFolder = service.children().list(folderId=folder['id'], maxResults=1000).execute()
-    for f in filesInFolder['items']:
-        list.append([getNameFromId(f['id'], service), f['id']])
-    #return list
 
 
 
@@ -70,19 +64,13 @@ def getFilesInFolder(folderName, folders, list, service):
 def main():
     service = authenticate()
     files = listFiles(service)
-    # fileName = input("What is the name of the file: ")
-    # fileName = "Test Doc"
-    fileName = "Agile Methods"
-    id , file = getFileInfo(fileName, files)
+    # fileName = input("What is the name of the file or folder: ")
+    fileName = "2018S2"
+    id , file= getFileInfo(fileName, files)
 
-
-
-    folders = getFolders(service)
     list = []
-    folderName = "FIT2107 CEEBS"
+    getFilesInFolder(file, list, service)
 
-
-    getFilesInFolder(folderName, folders, list, service)
     for i in list:
         print(i[0])
 
