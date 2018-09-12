@@ -20,8 +20,11 @@ def main():
 
     # Call the Drive Activity API
     results = service.activities().list(source='drive.google.com',
-        drive_ancestorId='root', pageSize=10).execute()
+        drive_ancestorId='root', pageSize=1000).execute()
     activities = results.get('activities', [])
+
+
+    fileName = "Test Doc"
 
     if not activities:
         print('No activity.')
@@ -29,16 +32,23 @@ def main():
         print('Recent activity:')
         for activity in activities:
             event = activity['combinedEvent']
-            print("\n",activity)
-            #print("\n", event, "\n")
-            user = event.get('user', None)
             target = event.get('target', None)
-            if user is None or target is None:
+            if target == None:
                 continue
-            time = datetime.datetime.fromtimestamp(
-                int(event['eventTimeMillis'])/1000)
-            print('{0}: {1}, {2}, {3} ({4}) {5}'.format(time, user['name'],
-                event['primaryEventType'], target['name'], target['mimeType'], target['id']))
+            if target.get('name',  None) != fileName:
+                continue
+            else:
+                print("\n",activity)
+                #print("\n", event, "\n")
+                user = event.get('user', None)
+                print("\n\nUser: \t", user)
+                print("\n\nTarget: \t",target)
+                if user is None or target is None:
+                    continue
+                # time = datetime.datetime.fromtimestamp(
+                #     int(event['eventTimeMillis'])/1000)
+                # print('{0}: {1}, {2}, {3} ({4}) {5}'.format(time, user['name'],
+                #     event['primaryEventType'], target['name'], target['mimeType'], target['id']))
 
 
 
