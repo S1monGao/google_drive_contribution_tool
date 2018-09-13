@@ -1,9 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from test_style import get_colour_from_text_style
 import time
 
@@ -101,7 +98,6 @@ for revision in all_revisions_on_page:
 
 """
 Current Issues:
- - Main problem: can only see changes on first page
  - Secondary problem: colour in right column for user is slightly different to colour used in text
  - Also haven't looked into checking for the strike-through to differentiate addition and deletion
 """
