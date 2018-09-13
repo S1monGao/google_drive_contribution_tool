@@ -1,4 +1,6 @@
 """
+Algorithm for differentiating between deletions and additions
+
 dec_widths = [] # An array of decorations (strikethroughs that denote a deletion) for a paragraph in the form (width, colour), e.g. (10.00, (100,0,255))
 contents = [] # An array of sections from a paragraph in the form (width, colour, content), e.g. (100.00 (100,0,255), "Test content")
 
@@ -49,19 +51,31 @@ def get_users_and_colours(revision):
         users.append((user_name, get_colour_from_text_style(user_colour)))
     return users
 
+
 def get_decorations_and_contents(paragraph):
+    """
+    Find all strike-throughs and text sections of a paragraph (really a line)
+    :param paragraph: paragraph element from DOM
+    :return: 2 arrays: one for all the decoration (strike-through) elements in the pargraph, one for all the text elements
+    """
     decoration_elements = paragraph.find_elements_by_xpath('.//div[@class="kix-lineview-decorations"]')
     decoration_elements = [element.find_element_by_xpath('.//div') for element in decoration_elements]
     content_elements = paragraph.find_elements_by_xpath('.//span[@class="kix-wordhtmlgenerator-word-node"]')
     return decoration_elements, content_elements
 
+
 def get_length_from_decoration_element(element):
+    """
+    Gets the width of a given strike-through from its corresponding DOM element
+    :param element: A decoration DOM element
+    :return: The length of the strike-through as stated in the style attribute of the element in pixels
+    """
     style = element.get_attribute('style')
     style = style.split(";")
     i = 0
     while "width" not in style[i]:
         i += 1
-    return style[i].split(":")[1]
+    return style[i].split(":")[1][:-2]
 
 
 # Create a webdriver for scraping
@@ -126,11 +140,11 @@ for revision in all_revisions_on_page:
             if len(content_elements) > 0:
                 print(content_elements[0].size)
             else:
-                print("Line has no content")
+                print("Text has no content")
             if len(decoration_elements) > 0:
                 print(get_length_from_decoration_element(decoration_elements[0]))
             else:
-                print("Line has not decoration")
+                print("Text has no decoration")
 
         print("************")
     print(get_users_and_colours(revision))
@@ -139,7 +153,7 @@ for revision in all_revisions_on_page:
 """
 Current Issues:
  - Secondary problem: colour in right column for user is slightly different to colour used in text
- - Also haven't looked into checking for the strike-through to differentiate addition and deletion
+ - Working on checking for the strike-through to differentiate addition and deletion
 """
 
 
