@@ -62,8 +62,7 @@ ActionChains(driver)\
 #Sleep again to make sure it has time to load version history
 time.sleep(3)
 
-# (ignore) pages = driver.find_elements_by_xpath('//div[contains(@guidedhelpid, "docs_editing_area")]')
-# print(len(pages))
+
 
 #Find revisions from side bar
 all_revisions_on_page = driver.find_elements_by_xpath('//div[@class="docs-revisions-collapsible-pane-milestone-tile-container"]')
@@ -74,17 +73,29 @@ for revision in all_revisions_on_page:
     #Give time for content to load
     time.sleep(3)
 
-    # (ignore) all_paragraphs = WebDriverWait(driver, 60).until(EC.presence_of_all_elements_located((By.XPATH, ".//div[@class='kix-paragraphrenderer']")))
-    # Alternative: all_paragraphs = driver.find_elements_by_xpath('//div[contains(@class, "kix-paragraphrenderer")]')
+    pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
 
-    all_items = driver.find_elements_by_xpath('.//span[contains(@class, "kix-wordhtmlgenerator-word-node")]')
-    print(len(all_items))
-    for item in all_items:
+    # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
+    first_page_index = len(pages) // 2
+    pages = pages[first_page_index:]
 
-        print(item.text)
-        print(get_colour_from_text_style(item.get_attribute('style')))
+    for i in range(len(pages)):
+        page = pages[i]
 
-    print("************")
+        # We have to go to each page and stay there for the DOM to load to get all the content on the page
+        time.sleep(3)
+        ActionChains(driver).move_to_element(page).perform()
+
+        # Get all the lines on the page
+        all_items = page.find_elements_by_xpath('.//span[contains(@class, "kix-wordhtmlgenerator-word-node")]')
+
+        for item in all_items:
+            if len(item.text.strip()) > 0:
+                print(item.text)
+
+                # Find the rgb of the text
+                print(get_colour_from_text_style(item.get_attribute('style')))
+        print("************")
     print(get_users_and_colours(revision))
     print("----------------")
 
