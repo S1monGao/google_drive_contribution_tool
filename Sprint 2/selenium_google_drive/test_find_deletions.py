@@ -1,31 +1,59 @@
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from ast import literal_eval
+import time
+
 """
 Algorithm for differentiating between deletions and additions
 
 dec_widths = [] # An array of decorations (strikethroughs that denote a deletion) for a paragraph in the form (width, colour), e.g. (10.00, (100,0,255))
 contents = [] # An array of sections from a paragraph in the form (width, colour, content), e.g. (100.00 (100,0,255), "Test content")
 
-deletions = [] # Stores all contents that correpsond to deletions
-additions = [] # Same for additions
-
-for content in contents:
-    deletion_found = False
-    for dec_width in dec_widths:
-        if abs(dec_widths[0] - content[0]) < 1 and dec_width[1] == content[1]: # We can match a decoration with the content if they have similar length and same colour
-            deletions.append(content)
-            deletion_found = True
-        if deletion_found:
-            dec_widths.remove(dec_width)
-            break
-    if not deletion_found:
-        additions.append(content)
-
 """
 
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-from test_style import get_colour_from_text_style
-import time
+
+def get_paragraph_additions_and_deletions(dec_widths, contents):
+    deletions = []  # Stores all contents that correpsond to deletions
+    additions = []  # Same for additions
+
+    for content in contents:
+        if content[1] != (0, 0, 0) and len(content[2].strip()) > 0:  # Not part of an edit
+            deletion_found = False
+            for dec_width in dec_widths:
+                if 0.9 < dec_width[0]/content[0] < 1.1 and dec_width[1] == content[1]:  # We can match a decoration with the content if they have similar length and same colour
+                    deletions.append(content)
+                    deletion_found = True
+                if deletion_found:
+                    dec_widths.remove(dec_width)
+                    break
+            if not deletion_found:
+                additions.append(content)
+    return additions, deletions
+
+
+def get_colour_from_text_style(style_string):
+    """
+    Converts the style attribute of an HTML element into a tuple of 3 rgb numbers
+    :param style_string: The style attribute of the element
+    :return: An rgb tuple, e.g. (0, 255, 62)
+    """
+
+    # Remove spaces and split by ";"
+    style_string = style_string.replace(" ", "").split(";")
+
+    # Search for colour section
+    i = 0
+    while "rgb" not in style_string[i]:
+        i += 1
+    colour_section = style_string[i]
+
+    #Isolate tuple
+    colour = colour_section.split(":")[1]
+    colour_tuple = colour[3:]
+
+    # Convert string that looks like a tuple to a tuple
+    return literal_eval(colour_tuple)
 
 
 def get_users_and_colours(revision):
@@ -64,7 +92,7 @@ def get_decorations_and_contents(paragraph):
     return decoration_elements, content_elements
 
 
-def get_length_from_decoration_element(element):
+def process_decoration_element(element):
     """
     Gets the width of a given strike-through from its corresponding DOM element
     :param element: A decoration DOM element
@@ -72,10 +100,32 @@ def get_length_from_decoration_element(element):
     """
     style = element.get_attribute('style')
     style = style.split(";")
-    i = 0
+    i = 0 # index for width
+    j = 0 # index for colour
     while "width" not in style[i]:
         i += 1
-    return style[i].split(":")[1][:-2]
+    while j < len(style) and "rgb" not in style[j]:
+        j += 1
+    length = style[i].split(":")[1][:-2]
+    colour = "000000"
+    if j < len(style):
+        colour = style[j].split('rgb')[1]
+    return (float(length), literal_eval(colour))
+
+
+def process_content_element(element):
+    """
+    Converts the style attribute of an HTML element into a tuple of 3 rgb numbers
+    :param style_string: The style attribute of the element
+    :return: An rgb tuple, e.g. (0, 255, 62)
+    """
+
+    # Remove spaces and split by ";"
+    content = element.text
+    style_string = element.get_attribute('style')
+    colour_tuple = get_colour_from_text_style(style_string)
+    length = element.size['width']
+    return (length, colour_tuple, content)
 
 
 # Create a webdriver for scraping
@@ -125,6 +175,9 @@ for revision in all_revisions_on_page:
     first_page_index = len(pages) // 2
     pages = pages[first_page_index:]
 
+    all_additions = []
+    all_deletions = []
+
     for i in range(len(pages)):
         page = pages[i]
 
@@ -134,19 +187,16 @@ for revision in all_revisions_on_page:
 
         # Get all the lines on the page
         all_paragraphs = page.find_elements_by_xpath('.//div[contains(@class, "kix-paragraphrenderer")]')
-        print(len(all_paragraphs))
+
         for paragraph in all_paragraphs:
             decoration_elements, content_elements = get_decorations_and_contents(paragraph)
-            if len(content_elements) > 0:
-                print(content_elements[0].size)
-            else:
-                print("Text has no content")
-            if len(decoration_elements) > 0:
-                print(get_length_from_decoration_element(decoration_elements[0]))
-            else:
-                print("Text has no decoration")
-
-        print("************")
+            processed_decorations = [process_decoration_element(element) for element in decoration_elements]
+            processed_contents = [process_content_element(element) for element in content_elements]
+            paragraph_additions, paragraph_deletions = get_paragraph_additions_and_deletions(processed_decorations, processed_contents)
+            all_additions += paragraph_additions
+            all_deletions += paragraph_deletions
+    print(all_additions)
+    print(all_deletions)
     print(get_users_and_colours(revision))
     print("----------------")
 
