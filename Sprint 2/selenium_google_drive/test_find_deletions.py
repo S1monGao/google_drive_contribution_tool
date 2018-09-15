@@ -3,6 +3,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from ast import literal_eval
 import time
+import datetime as dt
 
 
 def get_paragraph_additions_and_deletions(dec_widths, contents):
@@ -125,6 +126,27 @@ def process_content_element(element):
     length = element.size['width']
     return (length, colour_tuple, content)
 
+def convert_doc_date_to_datetime(doc_date_string):
+    """
+    Converts datetime string from Google Docs HTML to datetime object
+    :param doc_date_string: String of date and time of revision from Google Docs
+    :return: A datetime object representing this date and time
+    """
+    # If revision happened in current year, no year will be shown and doc_date_string will only have one comma
+    year = current_year
+    month = 0
+    day = 0
+    hour = 0
+    minute = 0
+    num_commas = doc_date_string.count(",")
+    doc_date = doc_date_string.split(",")
+    if num_commas == 1:
+        index_first_comma = doc_date_string.index(",")
+        doc_date_string = doc_date_string[:index_first_comma + 1] + " " + current_year + "," + doc_date_string[index_first_comma + 1:]
+    return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
+
+
+current_year = "2018"
 
 # Create dictionary to convert from colour of edit to colour of user
 edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (85, 45, 168), (194, 24, 91)]
@@ -174,6 +196,8 @@ for revision in all_revisions_on_page:
     #Give time for content to load
     time.sleep(3)
 
+    revision_date_time = revision.find_element_by_xpath('//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
+    print(convert_doc_date_to_datetime(revision_date_time))
     pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
 
     # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)

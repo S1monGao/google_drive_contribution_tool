@@ -3,6 +3,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from ast import literal_eval
 import time
+import datetime as dt
 
 
 def get_paragraph_additions_and_deletions(dec_widths, contents):
@@ -130,6 +131,24 @@ def process_content_element(element):
 edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (85, 45, 168), (194, 24, 91), (6, 116, 179), (69, 90, 100)]
 user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96), (3, 169, 244), (84, 110, 122)]
 edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
+
+
+def convert_doc_date_to_datetime(doc_date_string):
+    """
+    Converts datetime string from Google Docs HTML to datetime object
+    :param doc_date_string: String of date and time of revision from Google Docs
+    :return: A datetime object representing this date and time
+    """
+
+    # If revision happened in current year, no year will be shown and doc_date_string will only have one comma
+    num_commas = doc_date_string.count(",")
+    if num_commas == 1:
+        index_first_comma = doc_date_string.index(",")
+        doc_date_string = doc_date_string[:index_first_comma + 1] + " " + current_year + "," + doc_date_string[index_first_comma + 1:]
+    return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
+
+
+current_year = "2018"
 
 
 
