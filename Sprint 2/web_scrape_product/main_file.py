@@ -127,8 +127,8 @@ def process_content_element(element):
 
 
 # Create dictionary to convert from colour of edit to colour of user
-edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (85, 45, 168), (194, 24, 91)]
-user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96)]
+edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (85, 45, 168), (194, 24, 91), (6, 116, 179), (69, 90, 100)]
+user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96), (3, 169, 244), (84, 110, 122)]
 edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
 
@@ -205,10 +205,11 @@ for revision in all_revisions_on_page:
     print(get_users_and_colours(revision))
     print("----------------")
 
+driver.close()
+
 """
 Current Issues:
  - Secondary problem: colour in right column for user is slightly different to colour used in text
- - Working on checking for the strike-through to differentiate addition and deletion
 """
 
 
