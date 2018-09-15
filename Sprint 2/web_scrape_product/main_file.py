@@ -6,9 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from ast import literal_eval
 from classes import User, Edit
+from plotting_functions import plot_pie_chart
 import time
 import datetime as dt
-import getpass
+
 
 
 def get_paragraph_additions_and_deletions(dec_widths, contents):
@@ -271,10 +272,10 @@ for revision in all_revisions_on_page:
                 user.add_edit(edit)
                 break
 
-    for user in users:
-        print("Name: {0}".format(user.name))
-        print("Num_added: {0}".format(str(user.num_added)))
-        print("Num_deleted: {0}".format(str(user.num_deleted)))
+for user in users:
+    print("Name: {0}".format(user.name))
+    print("Num_added: {0}".format(str(user.num_added)))
+    print("Num_deleted: {0}".format(str(user.num_deleted)))
 
 driver.close()
 
@@ -282,6 +283,9 @@ total_added = sum(user.num_added for user in users)
 total_deleted = sum(user.num_deleted for user in users)
 print(total_added)
 print(total_deleted)
+
+plot_pie_chart(users, True)
+plot_pie_chart(users, False)
 
 
 
