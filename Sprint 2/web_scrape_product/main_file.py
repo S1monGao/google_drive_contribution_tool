@@ -11,7 +11,6 @@ import time
 import datetime as dt
 
 
-
 def get_paragraph_additions_and_deletions(dec_widths, contents):
     """
 
@@ -53,7 +52,7 @@ def get_colour_from_text_style(style_string):
         i += 1
     colour_section = style_string[i]
 
-    #Isolate tuple
+    # Isolate tuple
     colour = colour_section.split(":")[1]
     colour_tuple = colour[3:]
 
@@ -242,18 +241,24 @@ for revision in all_revisions_on_page:
             paragraph_additions, paragraph_deletions = get_paragraph_additions_and_deletions(processed_decorations, processed_contents)
             all_additions += paragraph_additions
             all_deletions += paragraph_deletions
-    print(all_additions)
-    print(all_deletions)
+    print("Additions: {0}".format(all_additions))
+    print("Deletions: {0}".format(all_deletions))
+    print("-----------")
     user_tuples = get_users_and_colours(revision)
+
+    # Adding new User class instances to users array if needed
 
     # Every user tuple is in the form (name_string, colour_3_tuple)
     for user_tuple in user_tuples:
         user_found = False
         for user_instance in users:
+            # Compare by colour not name as users may have same name
             if user_tuple[1] == user_instance.colour:
                 user_found = True
         if not user_found:
             users.append(User(user_tuple[0], user_tuple[1]))
+
+    # Adding addtions/deletions to each User class instance
 
     # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
     for addition in all_additions:
@@ -276,13 +281,14 @@ for user in users:
     print("Name: {0}".format(user.name))
     print("Num_added: {0}".format(str(user.num_added)))
     print("Num_deleted: {0}".format(str(user.num_deleted)))
+    print("*************")
 
 driver.close()
 
 total_added = sum(user.num_added for user in users)
 total_deleted = sum(user.num_deleted for user in users)
-print(total_added)
-print(total_deleted)
+print("Total added: {0}".format(total_added))
+print("Total deleted: {0}".format(total_deleted))
 
 plot_pie_chart(users, True)
 plot_pie_chart(users, False)
