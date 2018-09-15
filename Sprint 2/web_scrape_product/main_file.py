@@ -75,8 +75,8 @@ def get_users_and_colours(revision):
 
         #Find the symbol of the user
         user_symbol = user_div.find_element_by_xpath('.//div[@class="docs-revisions-tile-swatch"]')
-        user_colour = user_symbol.get_attribute('style')
-        users.append((user_name, get_colour_from_text_style(user_colour)))
+        user_style = user_symbol.get_attribute('style')
+        users.append((user_name, get_colour_from_text_style(user_style)))
     return users
 
 
@@ -128,12 +128,6 @@ def process_content_element(element):
     return (length, colour_tuple, content)
 
 
-# Create dictionary to convert from colour of edit to colour of user
-edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (85, 45, 168), (194, 24, 91), (6, 116, 179), (69, 90, 100)]
-user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96), (3, 169, 244), (84, 110, 122)]
-edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
-
-
 def convert_doc_date_to_datetime(doc_date_string):
     """
     Converts datetime string from Google Docs HTML to datetime object
@@ -149,8 +143,13 @@ def convert_doc_date_to_datetime(doc_date_string):
     return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
 
 
-current_year = "2018"
+# Create dictionary to convert from colour of edit to colour of user
+edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179), (69, 90, 100)]
+user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96), (3, 169, 244), (84, 110, 122)]
+edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
+
+current_year = "2018"
 
 
 # Create a webdriver for scraping
@@ -180,21 +179,23 @@ ActionChains(driver)\
     .key_up(Keys.SHIFT) \
     .perform()
 
-#Sleep again to make sure it has time to load version history
+# Sleep again to make sure it has time to load version history
 time.sleep(3)
 
 users = []
 
-#Find revisions from side bar
+# Find revisions from side bar
 all_revisions_on_page = driver.find_elements_by_xpath('//div[@class="docs-revisions-collapsible-pane-milestone-tile-container"]')
 
 for revision in all_revisions_on_page:
-    #click on revision
+    # click on revision
     revision.click()
-    #Give time for content to load
+    # Give time for content to load
     time.sleep(3)
 
     pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
+    revision_datetime_string = revision.find_element_by_xpath('//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
+    revision_datetime = convert_doc_date_to_datetime(revision_datetime_string)
 
     # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
     first_page_index = len(pages) // 2
@@ -222,10 +223,41 @@ for revision in all_revisions_on_page:
             all_deletions += paragraph_deletions
     print(all_additions)
     print(all_deletions)
-    print(get_users_and_colours(revision))
+    user_tuples = get_users_and_colours(revision)
+
+    # Every user tuple is in the form (name_string, colour_3_tuple)
+    for user_tuple in user_tuples:
+        user_found = False
+        for user_instance in users:
+            if user_tuple[0] == user_instance.name:
+                user_found = True
+        if not user_found:
+            users.append(User(user_tuple[0], user_tuple[1]))
+
+    # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
+    for addition in all_additions:
+        edit = Edit(revision_datetime, addition[2], True)
+        converted_colour = edit_colour_to_user_colour[addition[1]]
+        for user in users:
+            if user.colour == converted_colour:
+                user.add_edit(edit)
+                break
+
+    for deletion in all_deletions:
+        edit = Edit(revision_datetime, deletion[2], False)
+        converted_colour = edit_colour_to_user_colour[deletion[1]]
+        for user in users:
+            if user.colour == converted_colour:
+                user.add_edit(edit)
+                break
+
+    for user in users:
+        print("Name: {0}".format(user.name))
+        print("Num_added: {0}".format(str(user.num_added)))
+        print("Num_deleted: {0}".format(str(user.num_deleted)))
     print("----------------")
 
-driver.close()
+
 
 """
 Current Issues:

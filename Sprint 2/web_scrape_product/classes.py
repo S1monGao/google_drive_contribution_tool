@@ -7,16 +7,16 @@ class User:
         """
         self.name = name
         self.colour = colour
-        self.revisions = []
+        self.edits = []
         self.num_added = 0
         self.num_deleted = 0
 
-    def add_revision(self, revision):
-        self.revisions.append(revision)
-        if revision.is_add:
-            self.num_added += revision.num_chars
+    def add_edit(self, edit):
+        self.edits.append(edit)
+        if edit.is_add:
+            self.num_added += edit.num_chars
         else:
-            self.num_deleted += revision.num_chars
+            self.num_deleted += edit.num_chars
 
 
 class Edit:
