@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from ast import literal_eval
+from classes import User, Edit
 import time
 import datetime as dt
 
@@ -182,7 +183,7 @@ ActionChains(driver)\
 #Sleep again to make sure it has time to load version history
 time.sleep(3)
 
-
+users = []
 
 #Find revisions from side bar
 all_revisions_on_page = driver.find_elements_by_xpath('//div[@class="docs-revisions-collapsible-pane-milestone-tile-container"]')
