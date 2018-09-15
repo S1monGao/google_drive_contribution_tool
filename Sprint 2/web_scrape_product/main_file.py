@@ -1,10 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from ast import literal_eval
 from classes import User, Edit
 import time
 import datetime as dt
+import getpass
 
 
 def get_paragraph_additions_and_deletions(dec_widths, contents):
@@ -151,6 +155,10 @@ edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
 current_year = "2018"
 
+username = input("Enter user_name: ")
+password = input("Enter password: ")
+
+
 
 # Create a webdriver for scraping
 driver = webdriver.Chrome()
@@ -161,10 +169,21 @@ unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8
 #Open unit_Test_Doc
 driver.get(test_doc_address)
 
-#It will ask you to login. You have 13 secs to do this, otherwise program will not work (to be fixed later)
-time.sleep(13)
+# Input and enter username
+WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']"))).send_keys(username)
+driver.find_element_by_xpath("//div[@id='identifierNext']").click()
 
-#Press CTRL-ALT-SHIFT-H to open version history
+# Wait for password input page to load (WebDriverWait doesnt seem to work here)
+time.sleep(3)
+
+# Input and enter password
+driver.find_element_by_xpath("//input[@type='password']").send_keys(password)
+driver.find_element_by_xpath("//div[@id='passwordNext']").click()
+
+# Ensures Google Docs loads first
+WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
+
+# Press CTRL-ALT-SHIFT-H to open version history
 ActionChains(driver)\
     .key_down(Keys.CONTROL) \
     .key_down(Keys.ALT) \
@@ -172,17 +191,18 @@ ActionChains(driver)\
     .send_keys('h') \
     .perform()
 
-#Un-press
+# Un-press
 ActionChains(driver)\
     .key_up(Keys.CONTROL) \
     .key_up(Keys.ALT) \
     .key_up(Keys.SHIFT) \
     .perform()
 
+# Will store all User class instances
+users = []
+
 # Sleep again to make sure it has time to load version history
 time.sleep(3)
-
-users = []
 
 # Find revisions from side bar
 all_revisions_on_page = driver.find_elements_by_xpath('//div[@class="docs-revisions-collapsible-pane-milestone-tile-container"]')
@@ -229,7 +249,7 @@ for revision in all_revisions_on_page:
     for user_tuple in user_tuples:
         user_found = False
         for user_instance in users:
-            if user_tuple[0] == user_instance.name:
+            if user_tuple[1] == user_instance.colour:
                 user_found = True
         if not user_found:
             users.append(User(user_tuple[0], user_tuple[1]))
@@ -255,14 +275,17 @@ for revision in all_revisions_on_page:
         print("Name: {0}".format(user.name))
         print("Num_added: {0}".format(str(user.num_added)))
         print("Num_deleted: {0}".format(str(user.num_deleted)))
-    print("----------------")
+
+driver.close()
+
+total_added = sum(user.num_added for user in users)
+total_deleted = sum(user.num_deleted for user in users)
+print(total_added)
+print(total_deleted)
 
 
 
-"""
-Current Issues:
- - Secondary problem: colour in right column for user is slightly different to colour used in text
-"""
+
 
 
 

@@ -31,6 +31,6 @@ class Edit:
         self.content = content
         self.time = time
         self.is_add = is_add
-        self.num_chars = len(content.replace(" ", ""))
+        self.num_chars = len("".join(content.split()))
 
 
