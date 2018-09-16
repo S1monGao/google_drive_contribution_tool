@@ -292,6 +292,8 @@ total_deleted = sum(user.num_deleted for user in users)
 print("Total added: {0}".format(total_added))
 print("Total deleted: {0}".format(total_deleted))
 
+# Plotting
+
 plot_pie_chart(users, True)
 plot_pie_chart(users, False)
 plot_lines(users, start_time, end_time, True)
