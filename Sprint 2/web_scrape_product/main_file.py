@@ -18,7 +18,7 @@ def get_paragraph_additions_and_deletions(dec_widths, contents):
     :param contents: An array of sections from a paragraph in the form (width, colour, content), e.g. (100.00 (100,0,255), "Test content")
     :return: an array of additions and deletions from a paragraphs
     """
-    deletions = []  # Stores all contents that correpsond to deletions
+    deletions = []  # Stores all contents that correspond to deletions
     additions = []  # Same for additions
 
     for content in contents:

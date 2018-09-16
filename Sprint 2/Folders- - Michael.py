@@ -47,6 +47,7 @@ def getFile(fileId, service):
 
 def getFilesInFolder(folder, list, service):
     filesInFolder = service.children().list(folderId=folder['id'], maxResults=1000).execute()
+    print(filesInFolder)
     if filesInFolder['items']:
         for f in filesInFolder['items']:
             tmp = getFile(f['id'], service)
@@ -63,16 +64,54 @@ def getFilesInFolder(folder, list, service):
 
 def main():
     service = authenticate()
+
+
     files = listFiles(service)
     # fileName = input("What is the name of the file or folder: ")
-    fileName = "2018S2"
-    id , file= getFileInfo(fileName, files)
+    
+    #fileName = "2018S2"
+    #id , file= getFileInfo(fileName, files)
 
     list = []
-    getFilesInFolder(file, list, service)
+    #team = service.teamdrives().get(teamDriveId="0ABWpUQItOU0xUk9PVA")
+    #print(team)
 
-    for i in list:
-        print(i[0])
+
+    #file = service.files().get(fileId="0ABWpUQItOU0xUk9PVA", supportsTeamDrives=True).execute()
+    file = service.files().list(corpora= "teamDrive",includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId= "0ABWpUQItOU0xUk9PVA").execute()
+    print(file)
+    #getFilesInFolder(team, list, service)
+
+    #for i in list:
+        #print(i)
+
+
+    """
+
+    teams = service.teamdrives().list().execute()
+    for item in teams['items']:
+        print(item['name'], item['id'])
+
+    filesInFolder = service.children().list(folderId=""0ABWpUQItOU0xUk9PVA"", maxResults=1000).execute()
+    print(filesInFolder)
+
+
+    
+    
+    tmp = service.children().list(folderId="0ABWpUQItOU0xUk9PVA").execute()
+    print(tmp)
+    print("len of tmp is: ", len(tmp['items']))
+
+    child = service.children().get(folderId="0ABWpUQItOU0xUk9PVA", childId="1JV2zn6owERSviN2_zbzW_WQiq_bj9bZq")
+    print(child['name'])
+
+
+    #for f in tmp['items']:
+        #print(getFile(f['id'], service))
+    """
+
+
+
 
 
 

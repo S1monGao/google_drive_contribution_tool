@@ -20,6 +20,7 @@ from oauth2client import file, client, tools
 import datetime as dt
 import matplotlib.pyplot as plt
 from classes import User_v2, Revision
+
 def Menu():
     quit = False
     # print('HELP\n\'choose file\': Choose the file or folder to view\n\'pie chart\': Prints pie chart of percentage contributions\n\'timeline\': Prints timelines of all group members between specified start and end points\n\'changes\': Prints changes made by all group members between specified start and end points\n\'help\': Prints help menu\n\'quit\': Exits the program\n')
@@ -65,7 +66,7 @@ def authenticate():
     service = build('drive', 'v2', http=creds.authorize(Http()))
     return service
 
-def getDocsNSheets(service):
+def getDocsSheetsFolders(service):
     """
     Gets all the files in the google drive that are google docs or sheets and returns a list of them
     It only searches the first 200 files
@@ -78,7 +79,7 @@ def getDocsNSheets(service):
     tmp = []
     # print file name for every google doc and sheet
     for f in items['items']:
-        if "google-apps.document" in f['mimeType'] or "google-apps.spreadsheet" in f['mimeType']:
+        if "google-apps.document" in f['mimeType'] or "google-apps.spreadsheet" in f['mimeType'] or "folder" in f['mimeType']:
             tmp.append(f)
     return tmp
 
@@ -88,14 +89,14 @@ def getFileInfo(fileName, files):
 
     :param fileName: Name of the file that you want to get the metadata of
     :param files: A list of file metadata
-    :return: the metadata of the file that matched the fileName
+    :return: the file id and the metadata of the file that matched the fileName
     """
     for file in files:
         if file['title'] == fileName:
             # print(file)
-            return file
+            return file['id'], file
     print("Invalid file name, please try again")
-    return False
+    return False, False
 
 def get_revision_content(revision, service):
     """
@@ -118,14 +119,16 @@ def getRevisions(file, service):
     revisions = service.revisions().list(fileId=fileId, fields="*", maxResults=1000).execute()
     return revisions
 
-def handleRevisionData(revisions, service):
+def getNameFromId(fileId, service):
+    return service.files().get(fileId=fileId).execute()['title']
+
+def handleRevisionData(revisions, service, users):
     """
     From the revision data, this file creates a new User for each user who modified the code and adds their revision data
     to the user
     :param revisions: A list of revision metadata on the file that you want the data on
     :return: An array of users (a class) with their revision data
     """
-    users = []
     previous_revision_num_chars = 0
     for revision in revisions['items']:
         revision_content = get_revision_content(revision, service)
@@ -162,7 +165,7 @@ def handleRevisionData(revisions, service):
             new_user = User_v2(name=modifier_name)
             new_user.add_revision(revision_object)
             users.append(new_user)
-    return users
+    return
 
 def plot_pie_chart(users):
     """
@@ -231,25 +234,60 @@ def graphData(users, start_time, end_time):
     plot_lines(users, start_time, end_time, True)
     plot_lines(users, start_time, end_time, False)
 
+def getFileFromId(fileId, service):
+    return service.files().get(fileId=fileId).execute()
+
+def getFilesInFolder(folder, alist, service):
+    filesInFolder = service.children().list(folderId=folder['id'], maxResults=1000).execute()
+    if filesInFolder['items']:
+        for f in filesInFolder['items']:
+            tmp = getFileFromId(f['id'], service)
+            if "folder" in tmp['mimeType']:
+                getFilesInFolder(tmp, alist, service)
+            elif "google-apps.document" in tmp['mimeType']:
+                #alist.append([getNameFromId(tmp['id'], service), tmp['id']])
+                # or "google-apps.spreadsheet" in tmp['mimeType']
+                alist.append(tmp)
+    else:
+        alist.append([getNameFromId(folder['id'], service), folder['id']])
+
+def recursive(service, afile, users):
+    fileList = []
+    getFilesInFolder(afile, fileList, service)
+    for afile in fileList:
+        revisions = getRevisions(afile, service)
+        handleRevisionData(revisions, service, users)
+    return users
+
 def main(fileName):
     service = authenticate()
-    files = getDocsNSheets(service)
+    files = getDocsSheetsFolders(service)
 
     # fileName = input("Enter the filename: ")
     # fileName = "Test Doc"
-    file = getFileInfo(fileName, files)
-    if not file:
+    id1, file1 = getFileInfo(fileName, files)
+    if not file1:
+        print("Error, File not found!!")
         return
-    revisions = getRevisions(file, service)
-    users = handleRevisionData(revisions, service)
+
+    users = []
+    if "folder" in file1['mimeType']:
+        recursive(service, file1, users)
+    else:
+        revisions = getRevisions(file1, service)
+        handleRevisionData(revisions, service, users)
+    
+    
+
+    
 
     # getting time of file creation and adding 10 hrs to convert to AEST
-    start_time = dt.datetime.strptime(file['createdDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f')
+    start_time = dt.datetime.strptime(file1['createdDate'][:-2], '%Y-%m-%dT%H:%M:%S.%f')
     start_time = start_time + dt.timedelta(hours=4)
 
     end_time = dt.datetime.now()
     graphData(users, start_time, end_time)
 
 if __name__ == '__main__':
-    # main()
-    Menu()
+    main("Collaborative Worksheet Booklet Answers")
+    #Menu()
