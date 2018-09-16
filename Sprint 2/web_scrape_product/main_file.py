@@ -6,9 +6,48 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from ast import literal_eval
 from classes import User, Edit
-from plotting_functions import plot_pie_chart
+from plotting_functions import plot_pie_chart, plot_lines
 import time
 import datetime as dt
+import platform
+
+
+def open_version_history():
+    """
+    Opens version history depending on OS
+    :precondition: The relevant google doc should be open
+    :return: None
+    """
+    # Check if user is using Mac
+    if platform.system() == "Darwin":
+        # Press COMMAND-ALT-SHIFT-H to open version history
+        ActionChains(driver) \
+            .key_down(Keys.COMMAND) \
+            .key_down(Keys.ALT) \
+            .key_down(Keys.SHIFT) \
+            .send_keys('h') \
+            .perform()
+
+        # Un-press
+        ActionChains(driver) \
+            .key_up(Keys.COMMAND) \
+            .key_up(Keys.ALT) \
+            .key_up(Keys.SHIFT) \
+            .perform()
+    else:
+        # Press CTRL-ALT-SHIFT-H to open version history
+        ActionChains(driver) \
+            .key_down(Keys.CONTROL) \
+            .key_down(Keys.ALT) \
+            .key_down(Keys.SHIFT) \
+            .send_keys('h') \
+            .perform()
+
+        ActionChains(driver) \
+            .key_up(Keys.CONTROL) \
+            .key_up(Keys.ALT) \
+            .key_up(Keys.SHIFT) \
+            .perform()
 
 
 def get_paragraph_additions_and_deletions(dec_widths, contents):
@@ -147,6 +186,11 @@ def convert_doc_date_to_datetime(doc_date_string):
     return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
 
 
+
+
+
+
+
 # Create dictionary to convert from colour of edit to colour of user
 edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179), (69, 90, 100)]
 user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96), (3, 169, 244), (84, 110, 122)]
@@ -154,11 +198,11 @@ edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
 
 current_year = "2018"
+start_time = dt.datetime(2018, 8, 28)
+end_time = dt.datetime.now()
 
 username = input("Enter user_name: ")
 password = input("Enter password: ")
-
-
 
 # Create a webdriver for scraping
 driver = webdriver.Chrome()
@@ -183,20 +227,7 @@ driver.find_element_by_xpath("//div[@id='passwordNext']").click()
 # Ensures Google Docs loads first
 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
 
-# Press CTRL-ALT-SHIFT-H to open version history
-ActionChains(driver)\
-    .key_down(Keys.CONTROL) \
-    .key_down(Keys.ALT) \
-    .key_down(Keys.SHIFT) \
-    .send_keys('h') \
-    .perform()
-
-# Un-press
-ActionChains(driver)\
-    .key_up(Keys.CONTROL) \
-    .key_up(Keys.ALT) \
-    .key_up(Keys.SHIFT) \
-    .perform()
+open_version_history()
 
 # Will store all User class instances
 users = []
@@ -214,7 +245,7 @@ for revision in all_revisions_on_page:
     time.sleep(3)
 
     pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
-    revision_datetime_string = revision.find_element_by_xpath('//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
+    revision_datetime_string = revision.find_element_by_xpath('.//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
     revision_datetime = convert_doc_date_to_datetime(revision_datetime_string)
 
     # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
@@ -290,8 +321,12 @@ total_deleted = sum(user.num_deleted for user in users)
 print("Total added: {0}".format(total_added))
 print("Total deleted: {0}".format(total_deleted))
 
+# Plotting
+
 plot_pie_chart(users, True)
 plot_pie_chart(users, False)
+plot_lines(users, start_time, end_time, True)
+plot_lines(users, start_time, end_time, False)
 
 
 
