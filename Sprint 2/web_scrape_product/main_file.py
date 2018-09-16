@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from ast import literal_eval
 from classes import User, Edit
-from plotting_functions import plot_pie_chart
+from plotting_functions import plot_pie_chart, plot_lines, plot_line_info
 import time
 import datetime as dt
 
@@ -154,6 +154,8 @@ edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
 
 current_year = "2018"
+start_time = dt.datetime(2018, 8, 28)
+end_time = dt.datetime.now()
 
 username = input("Enter user_name: ")
 password = input("Enter password: ")
@@ -214,7 +216,7 @@ for revision in all_revisions_on_page:
     time.sleep(3)
 
     pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
-    revision_datetime_string = revision.find_element_by_xpath('//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
+    revision_datetime_string = revision.find_element_by_xpath('.//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
     revision_datetime = convert_doc_date_to_datetime(revision_datetime_string)
 
     # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
@@ -292,6 +294,8 @@ print("Total deleted: {0}".format(total_deleted))
 
 plot_pie_chart(users, True)
 plot_pie_chart(users, False)
+plot_lines(users, start_time, end_time, True)
+plot_lines(users, start_time, end_time, False)
 
 
 
