@@ -57,11 +57,11 @@ def get_paragraph_additions_and_deletions(dec_widths, contents):
     :param contents: An array of sections from a paragraph in the form (width, colour, content), e.g. (100.00 (100,0,255), "Test content")
     :return: an array of additions and deletions from a paragraphs
     """
-    deletions = []  # Stores all contents that correpsond to deletions
+    deletions = []  # Stores all contents that correspond to deletions
     additions = []  # Same for additions
 
     for content in contents:
-        if content[1] != (0, 0, 0) and len(content[2].strip()) > 0:  # Not part of an edit
+        if content[1] != (0, 0, 0) and len(content[2].strip()) > 0:  # Check if content is part of an edit
             deletion_found = False
             for dec_width in dec_widths:
                 if 0.9 < dec_width[0]/content[0] < 1.1 and dec_width[1] == content[1]:  # We can match a decoration with the content if they have similar length and same colour
@@ -210,7 +210,7 @@ driver = webdriver.Chrome()
 test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2vOaz3D4hwX04Hcup29c/edit"
 unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
 
-#Open unit_Test_Doc
+# Open unit_Test_Doc
 driver.get(test_doc_address)
 
 # Input and enter username
@@ -289,7 +289,7 @@ for revision in all_revisions_on_page:
         if not user_found:
             users.append(User(user_tuple[0], user_tuple[1]))
 
-    # Adding addtions/deletions to each User class instance
+    # Adding additions/deletions to each User class instance
 
     # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
     for addition in all_additions:
