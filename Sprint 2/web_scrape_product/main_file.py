@@ -218,10 +218,12 @@ WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//inp
 driver.find_element_by_xpath("//div[@id='identifierNext']").click()
 
 # Wait for password input page to load (WebDriverWait doesnt seem to work here)
-time.sleep(3)
+# time.sleep(3)
+
+WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@type='password']"))).send_keys(password)
 
 # Input and enter password
-driver.find_element_by_xpath("//input[@type='password']").send_keys(password)
+# driver.find_element_by_xpath("//input[@type='password']").send_keys(password)
 driver.find_element_by_xpath("//div[@id='passwordNext']").click()
 
 # Ensures Google Docs loads first
