@@ -42,77 +42,57 @@ def getFileInfo(fileName, files):
 def getNameFromId(fileId, service):
     return service.files().get(fileId=fileId).execute()['title']
 
-def getFile(fileId, service):
-    return service.files().get(fileId=fileId).execute()
 
-def getFilesInFolder(folder, list, service):
+
+
+# From here down is useful!!!!
+
+def getFile(fileId, service):
+    return service.files().get(fileId=fileId, supportsTeamDrives=True).execute()
+
+def getFilesInFolder(folder, service):
+    alist = []
     filesInFolder = service.children().list(folderId=folder['id'], maxResults=1000).execute()
-    print(filesInFolder)
+    # Checking the folder is not empty
     if filesInFolder['items']:
         for f in filesInFolder['items']:
             tmp = getFile(f['id'], service)
             if "folder" in tmp['mimeType']:
-                getFilesInFolder(tmp, list, service)
+                alist.extend(getFilesInFolder(tmp, service))
             elif "google-apps.document" in tmp['mimeType'] or "google-apps.spreadsheet" in tmp['mimeType']:
-                list.append([getNameFromId(tmp['id'], service), tmp['id']])
-    else:
-        list.append([getNameFromId(folder['id'], service), folder['id']])
+                alist.append(tmp)
+    return alist
 
 
+def getTeamDriveId(service, teamDriveName):
+    teamDrives =  service.teamdrives().list().execute()['items']
+    for team in teamDrives:
+        if team['name'] == teamDriveName:
+            return team['id']
 
+def getTeamDriveFilesnFolders(service, teamDriveId):
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=teamDriveId).execute()['items']
+    fileList = []
+    for file in files:
 
+        # Getting all the docs and sheets
+        if "google-apps.document" in file['mimeType'] or "google-apps.spreadsheet" in file['mimeType']:
+            fileList.append(file)
+
+        if "folder" in file['mimeType']:
+            fileList.extend(getFilesInFolder(file, service))
+    return fileList
 
 def main():
     service = authenticate()
 
-
-    files = listFiles(service)
-    # fileName = input("What is the name of the file or folder: ")
-    
-    #fileName = "2018S2"
-    #id , file= getFileInfo(fileName, files)
-
-    list = []
-    #team = service.teamdrives().get(teamDriveId="0ABWpUQItOU0xUk9PVA")
-    #print(team)
-
-
-    #file = service.files().get(fileId="0ABWpUQItOU0xUk9PVA", supportsTeamDrives=True).execute()
     file = service.files().list(corpora= "teamDrive",includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId= "0ABWpUQItOU0xUk9PVA").execute()
-    print(file)
-    #getFilesInFolder(team, list, service)
 
-    #for i in list:
-        #print(i)
-
-
-    """
-
-    teams = service.teamdrives().list().execute()
-    for item in teams['items']:
-        print(item['name'], item['id'])
-
-    filesInFolder = service.children().list(folderId=""0ABWpUQItOU0xUk9PVA"", maxResults=1000).execute()
-    print(filesInFolder)
-
-
-    
-    
-    tmp = service.children().list(folderId="0ABWpUQItOU0xUk9PVA").execute()
-    print(tmp)
-    print("len of tmp is: ", len(tmp['items']))
-
-    child = service.children().get(folderId="0ABWpUQItOU0xUk9PVA", childId="1JV2zn6owERSviN2_zbzW_WQiq_bj9bZq")
-    print(child['name'])
-
-
-    #for f in tmp['items']:
-        #print(getFile(f['id'], service))
-    """
-
-
-
-
+    teamDriveName = "FIT2101"
+    id = getTeamDriveId(service, teamDriveName)
+    files = getTeamDriveFilesnFolders(service, id)
+    for i in files:
+        print(i['title'], i['alternateLink'])
 
 
 
