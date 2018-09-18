@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from ast import literal_eval
 from classes import User, Edit
-from plotting_functions import plot_pie_chart, plot_lines
+from plotting_functions import plot_pie_chart, plot_lines, save_all_plots
 import time
 import datetime as dt
 import platform
@@ -211,7 +211,7 @@ test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2
 unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
 
 # Open unit_Test_Doc
-driver.get(test_doc_address)
+driver.get(unit_test_doc_address)
 
 # Input and enter username
 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']"))).send_keys(username)
@@ -324,11 +324,13 @@ print("Total deleted: {0}".format(total_deleted))
 
 # Plotting
 
-plot_pie_chart(users, True)
-plot_pie_chart(users, False)
-plot_lines(users, start_time, end_time, True)
-plot_lines(users, start_time, end_time, False)
+fig1 = plot_pie_chart(users, True)
+fig2 = plot_pie_chart(users, False)
+fig3 = plot_lines(users, start_time, end_time, True)
+fig4 = plot_lines(users, start_time, end_time, False)
 
+figs = [fig1, fig2, fig3, fig4]
+save_all_plots(figs, "summary.pdf")
 
 
 

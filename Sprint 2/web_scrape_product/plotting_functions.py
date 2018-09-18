@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 import datetime as dt
 
 
@@ -10,6 +11,7 @@ def plot_pie_chart(users, is_additions):
     :return: None
     :postcondition: pie chart for number of revisions per user will be plotted
     """
+    fig = plt.figure()
     if is_additions:
         amounts = [user.num_added for user in users]
         plt.title("Number of characters added by users")
@@ -18,7 +20,7 @@ def plot_pie_chart(users, is_additions):
         plt.title("Number of characters deleted by users")
     plt.pie(amounts)
     plt.legend([user.name for user in users])
-    plt.show()
+    return fig
 
 
 def plot_line_info(user, start_time, end_time, num_sections, is_additions):
@@ -55,18 +57,30 @@ def plot_lines(users, start_time, end_time, is_additions):
     :return: None
     :postcondition: line graphs for each user's revisions at each time interval are plotted
     """
+    fig, ax = plt.subplots()
     num_sections = int(((end_time - start_time) / dt.timedelta(hours=6) + 1) // 1)
     time_axis = num_sections * [0]
     time_axis[0] = start_time
     for i in range(1, num_sections):
         time_axis[i] = start_time + i*dt.timedelta(hours=6)
     for user in users:
-        plt.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections, is_additions))
+        ax.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections, is_additions))
     plt.legend([user.name for user in users], loc='upper right')
     plt.xlabel("Date and hour")
     plt.ylabel("Number of characters")
+    ax.xaxis_date()  # interpret the x-axis values as dates
+    fig.autofmt_xdate()
     if is_additions:
         plt.title("Number of characters added by each user at given times")
     else:
         plt.title("Number of characters deleted by each user at given times")
-    plt.show()
+    return fig
+
+
+def save_all_plots(plot_figures, file_name):
+    file = PdfPages(filename=file_name)
+    for figure in plot_figures:
+        file.savefig(figure)
+    file.close()
+
+
