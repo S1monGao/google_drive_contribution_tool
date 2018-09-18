@@ -10,6 +10,7 @@ from plotting_functions import plot_pie_chart, plot_lines, save_all_plots
 import time
 import datetime as dt
 import platform
+from fpdf import FPDF
 
 
 def open_version_history():
@@ -330,10 +331,18 @@ fig3 = plot_lines(users, start_time, end_time, True)
 fig4 = plot_lines(users, start_time, end_time, False)
 
 figs = [fig1, fig2, fig3, fig4]
-save_all_plots(figs, "summary.pdf")
+save_all_plots(figs, "graph_summary.pdf")
 
 
+pdf = FPDF()
+for user in users:
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)
+    pdf.cell(40, 10, user.name)
+    pdf.ln()
+    pdf.set_font('Arial', '', 12)
+    pdf.cell(40, 10, "Number of chars added: {0}".format(user.num_added))
 
-
+pdf.output('summary.pdf', 'F')
 
 
