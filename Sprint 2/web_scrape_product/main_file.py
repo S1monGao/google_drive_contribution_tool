@@ -217,8 +217,7 @@ driver.get(test_doc_address)
 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']"))).send_keys(username)
 driver.find_element_by_xpath("//div[@id='identifierNext']").click()
 
-# Wait for password input page to load (WebDriverWait doesnt seem to work here)
-# time.sleep(3)
+# Wait for password input element to be visible (presence doesnt seem to work here)
 
 WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@type='password']"))).send_keys(password)
 
