@@ -46,19 +46,25 @@ def getNameFromId(fileId, service):
 
 
 # From here down is useful!!!!
+def getFolderInTeamDrive(service, folderName, teamDriveName):
+    id = getTeamDriveId(service, teamDriveName)
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=id).execute()['items']
+    for f in files:
+        if f['title'] == folderName:
+            return f
 
 def getFile(fileId, service):
     return service.files().get(fileId=fileId, supportsTeamDrives=True).execute()
 
-def getFilesInFolder(folder, service):
+def getFilesInFolder(id, service):
     alist = []
-    filesInFolder = service.children().list(folderId=folder['id'], maxResults=1000).execute()
+    filesInFolder = service.children().list(folderId=id, maxResults=1000).execute()
     # Checking the folder is not empty
     if filesInFolder['items']:
         for f in filesInFolder['items']:
             tmp = getFile(f['id'], service)
             if "folder" in tmp['mimeType']:
-                alist.extend(getFilesInFolder(tmp, service))
+                alist.extend(getFilesInFolder(tmp['id'], service))
             elif "google-apps.document" in tmp['mimeType'] or "google-apps.spreadsheet" in tmp['mimeType']:
                 alist.append(tmp)
     return alist
@@ -80,19 +86,39 @@ def getTeamDriveFilesnFolders(service, teamDriveId):
             fileList.append(file)
 
         if "folder" in file['mimeType']:
-            fileList.extend(getFilesInFolder(file, service))
+            fileList.extend(getFilesInFolder(file['id'], service))
     return fileList
+
+def convertFilesToUrls(files):
+    urls = []
+    for file in files:
+        urls.append(file['alternateLink'])
+    return urls
+
 
 def main():
     service = authenticate()
 
-    file = service.files().list(corpora= "teamDrive",includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId= "0ABWpUQItOU0xUk9PVA").execute()
-
+    # GET ALL THE FILES WITHIN A TEAM DRIVE
     teamDriveName = "FIT2101"
-    id = getTeamDriveId(service, teamDriveName)
-    files = getTeamDriveFilesnFolders(service, id)
-    for i in files:
-        print(i['title'], i['alternateLink'])
+    # teamDriveName = input("Enter the name of the team drive you wish to enter: ")
+    # id = getTeamDriveId(service, teamDriveName)
+    # files = getTeamDriveFilesnFolders(service, id)
+    # for i in files:
+    #     print(i['title'], i['alternateLink'])
+
+
+
+    # GET A FOLDER WITHIN A TEAM DRIVE
+    folderName = "Assignment 1"
+    folder = getFolderInTeamDrive(service, folderName, teamDriveName)
+    folderFiles = getFilesInFolder(folder['id'],service)
+    # for f in folderFiles:
+    #     print(f['title'],"\n", f['alternateLink'], "\n")
+
+    urls = convertFilesToUrls(folderFiles)
+    print(urls)
+
 
 
 
