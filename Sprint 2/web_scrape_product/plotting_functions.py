@@ -22,7 +22,6 @@ def plot_pie_chart(users, is_additions):
         plt.pie(amounts)
         plt.title("Number of characters deleted by users")
         plt.legend([user.name for user in users if user.num_deleted > 0])
-    plt.show()
     return fig
 
 
@@ -78,11 +77,16 @@ def plot_lines(users, start_time, end_time, is_additions):
     else:
         plt.legend([user.name for user in users if user.num_deleted > 0], loc='upper right')
         plt.title("Number of characters deleted by each user at given times")
-    plt.show()
     return fig
 
 
 def save_all_plots(plot_figures, file_name):
+    """
+
+    :param plot_figures: Array of figure objects
+    :param file_name: Name of pdf file, e.g. 'test.pdf'
+    :return:
+    """
     file = PdfPages(filename=file_name)
     for figure in plot_figures:
         file.savefig(figure)
