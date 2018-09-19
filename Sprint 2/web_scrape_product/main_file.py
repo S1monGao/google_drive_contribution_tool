@@ -117,7 +117,7 @@ def get_users_and_colours(revision):
     for user_div in user_divs:
         user_name = user_div.text
 
-        #Find the symbol of the user
+        # Find the symbol of the user
         user_symbol = user_div.find_element_by_xpath('.//div[@class="docs-revisions-tile-swatch"]')
         user_style = user_symbol.get_attribute('style')
         users.append((user_name, get_colour_from_text_style(user_style)))
@@ -202,8 +202,8 @@ current_year = "2018"
 start_time = dt.datetime(2018, 8, 28)
 end_time = dt.datetime.now()
 
-username = input("Enter user_name: ")
-password = input("Enter password: ")
+# username = input("Enter user_name: ")
+# password = input("Enter password: ")
 
 # Create a webdriver for scraping
 driver = webdriver.Chrome()
@@ -214,6 +214,7 @@ unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8
 # Open unit_Test_Doc
 driver.get(unit_test_doc_address)
 
+"""
 # Input and enter username
 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']"))).send_keys(username)
 driver.find_element_by_xpath("//div[@id='identifierNext']").click()
@@ -225,9 +226,10 @@ WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//i
 # Input and enter password
 # driver.find_element_by_xpath("//input[@type='password']").send_keys(password)
 driver.find_element_by_xpath("//div[@id='passwordNext']").click()
+"""
 
 # Ensures Google Docs loads first
-WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
+WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
 
 open_version_history()
 
