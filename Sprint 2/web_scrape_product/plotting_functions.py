@@ -13,13 +13,14 @@ def plot_pie_chart(users, is_additions):
     """
     fig = plt.figure()
     if is_additions:
-        amounts = [user.num_added for user in users]
+        amounts = [user.num_added for user in users if user.num_added > 0]
         plt.title("Number of characters added by users")
+        plt.legend([user.name for user in users if user.num_added > 0])
     else:
         amounts = [user.num_deleted for user in users if user.num_deleted > 0]
         plt.title("Number of characters deleted by users")
+        plt.legend([user.name for user in users if user.num_added > 0])
     plt.pie(amounts)
-    plt.legend([user.name for user in users])
     return fig
 
 
