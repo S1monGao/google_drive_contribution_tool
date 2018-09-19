@@ -39,6 +39,12 @@ def plot_line_info(user, start_time, end_time, num_sections, is_additions):
     current_time = start_time
     edits = [edit for edit in user.edits]
     index = 0
+
+
+    #Deletes Edits outside of user specified time range so that they arent added to the line graphs
+    while len(edits) > 0 and edits[-1].time < start_time:
+        edits.pop()
+
     while current_time < end_time:
         while len(edits) > 0 and current_time <= edits[-1].time <= current_time + dt.timedelta(hours=6):
             if edits[-1].is_add is is_additions:
