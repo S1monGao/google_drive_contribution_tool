@@ -14,13 +14,15 @@ def plot_pie_chart(users, is_additions):
     fig = plt.figure()
     if is_additions:
         amounts = [user.num_added for user in users if user.num_added > 0]
+        plt.pie(amounts)
         plt.title("Number of characters added by users")
         plt.legend([user.name for user in users if user.num_added > 0])
     else:
         amounts = [user.num_deleted for user in users if user.num_deleted > 0]
+        plt.pie(amounts)
         plt.title("Number of characters deleted by users")
-        plt.legend([user.name for user in users if user.num_added > 0])
-    plt.pie(amounts)
+        plt.legend([user.name for user in users if user.num_deleted > 0])
+    plt.show()
     return fig
 
 
@@ -72,15 +74,17 @@ def plot_lines(users, start_time, end_time, is_additions):
         time_axis[i] = start_time + i*dt.timedelta(hours=6)
     for user in users:
         ax.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections, is_additions))
-    plt.legend([user.name for user in users], loc='upper right')
     plt.xlabel("Date and hour")
     plt.ylabel("Number of characters")
     ax.xaxis_date()  # interpret the x-axis values as dates
     fig.autofmt_xdate()
     if is_additions:
+        plt.legend([user.name for user in users if user.num_added > 0], loc='upper right')
         plt.title("Number of characters added by each user at given times")
     else:
+        plt.legend([user.name for user in users if user.num_deleted > 0], loc='upper right')
         plt.title("Number of characters deleted by each user at given times")
+    plt.show()
     return fig
 
 
