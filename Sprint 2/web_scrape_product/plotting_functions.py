@@ -45,6 +45,7 @@ def plot_line_info(user, start_time, end_time, num_sections, is_additions):
     while len(edits) > 0 and edits[-1].time < start_time:
         edits.pop()
 
+
     while current_time < end_time:
         while len(edits) > 0 and current_time <= edits[-1].time <= current_time + dt.timedelta(hours=6):
             if edits[-1].is_add is is_additions:
@@ -65,23 +66,21 @@ def plot_lines(users, start_time, end_time, is_additions):
     :return: None
     :postcondition: line graphs for each user's revisions at each time interval are plotted
     """
-    fig, ax = plt.subplots()
+    fig = plt.figure()
     num_sections = int(((end_time - start_time) / dt.timedelta(hours=6) + 1) // 1)
     time_axis = num_sections * [0]
     time_axis[0] = start_time
     for i in range(1, num_sections):
         time_axis[i] = start_time + i*dt.timedelta(hours=6)
     for user in users:
-        ax.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections, is_additions))
+        plt.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections, is_additions), alpha=0.5)
     plt.xlabel("Date and hour")
     plt.ylabel("Number of characters")
-    ax.xaxis_date()  # interpret the x-axis values as dates
-    fig.autofmt_xdate()
+    plt.gcf().autofmt_xdate()
+    plt.legend([user.name for user in users], loc='upper right')
     if is_additions:
-        plt.legend([user.name for user in users if user.num_added > 0], loc='upper right')
         plt.title("Number of characters added by each user at given times")
     else:
-        plt.legend([user.name for user in users if user.num_deleted > 0], loc='upper right')
         plt.title("Number of characters deleted by each user at given times")
     return fig
 
