@@ -199,8 +199,16 @@ edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
 
 current_year = "2018"
+
+#Asks user for start andend time
 start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
 end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ir 4/7/2016: "), '%d/%m/%Y')
+
+#Ensures that the user specified times are valid
+while start_time > end_time:
+    print("Invalid Dates detected\n Please enter a start time before the end time\n")
+    start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
+    end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ir 4/7/2016: "), '%d/%m/%Y')
 
 # username = input("Enter user_name: ")
 # password = input("Enter password: ")
