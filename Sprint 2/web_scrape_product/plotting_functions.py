@@ -68,15 +68,17 @@ def plot_lines(users, start_time, end_time, is_additions):
         time_axis[i] = start_time + i*dt.timedelta(hours=6)
     for user in users:
         ax.plot(time_axis, plot_line_info(user, start_time, end_time, num_sections, is_additions))
-    plt.legend([user.name for user in users], loc='upper right')
     plt.xlabel("Date and hour")
     plt.ylabel("Number of characters")
     ax.xaxis_date()  # interpret the x-axis values as dates
     fig.autofmt_xdate()
     if is_additions:
+        plt.legend([user.name for user in users if user.num_added > 0], loc='upper right')
         plt.title("Number of characters added by each user at given times")
     else:
+        plt.legend([user.name for user in users if user.num_deleted > 0], loc='upper right')
         plt.title("Number of characters deleted by each user at given times")
+    plt.show()
     return fig
 
 
