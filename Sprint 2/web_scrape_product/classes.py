@@ -24,7 +24,7 @@ class Edit:
     def __init__(self, time, content, is_add):
         """
 
-        :param content (Integer): Characters added/deleted by user (including spaces)
+        :param content (String): Characters added/deleted by user (including spaces)
         :param time (Datetime): Time at which revision was made
         :param is_add (Boolean): Whether revision was an addition or deletion
         """
