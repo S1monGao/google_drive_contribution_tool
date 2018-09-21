@@ -130,11 +130,8 @@ def get_decorations_and_contents(paragraph):
     :param paragraph: paragraph element from DOM
     :return: 2 arrays: one for all the decoration (strike-through) elements in the pargraph, one for all the text elements
     """
-    try:
-        decoration_section = paragraph.find_element_by_xpath('.//div[@class="kix-lineview-decorations"]')
-        decoration_elements = decoration_section.find_elements_by_xpath('.//div')
-    except:
-        decoration_elements = []
+    decoration_elements = paragraph.find_elements_by_xpath('.//div[@class="kix-lineview-decorations"]')
+    decoration_elements = [element.find_element_by_xpath('.//div') for element in decoration_elements]
     content_elements = paragraph.find_elements_by_xpath('.//span[@class="kix-wordhtmlgenerator-word-node"]')
     return decoration_elements, content_elements
 
