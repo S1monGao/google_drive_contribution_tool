@@ -22,7 +22,7 @@ def plot_pie_chart(users, is_additions):
         plt.pie(amounts)
         plt.title("Number of characters deleted by users")
         plt.legend([user.name for user in users if user.num_deleted > 0])
-    plt.show()
+
     return fig
 
 
@@ -84,7 +84,7 @@ def plot_lines(users, start_time, end_time, is_additions):
     else:
         plt.legend([user.name for user in users if user.num_deleted > 0], loc='upper right')
         plt.title("Number of characters deleted by each user at given times")
-    plt.show()
+
     return fig
 
 
