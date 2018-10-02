@@ -10,7 +10,6 @@ from plotting_functions import plot_pie_chart, plot_lines, save_all_plots
 import time
 import datetime as dt
 import platform
-from fpdf import FPDF
 from pdf_report import generate_pdf_report
 
 
@@ -169,7 +168,8 @@ def process_content_element(element):
     """
 
     # Remove spaces and split by ";"
-    content = element.text
+    content = "".join(char for char in element.text if ord(char) < 256)
+
     style_string = element.get_attribute('style')
     colour_tuple = get_colour_from_text_style(style_string)
     length = element.size['width']
@@ -224,7 +224,7 @@ if __name__ == '__main__':
     unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
 
     # Open unit_Test_Doc
-    driver.get(unit_test_doc_address)
+    driver.get(test_doc_address)
 
     # Ensures Google Docs loads first
     WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))

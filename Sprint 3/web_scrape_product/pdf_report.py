@@ -1,5 +1,4 @@
 from fpdf import FPDF
-from classes import User
 
 
 def generate_pdf_report(user):
@@ -19,11 +18,13 @@ def generate_pdf_report(user):
     pdf.ln()
     pdf.cell(40, 10, "Number of chars deleted: {0}".format(user.num_deleted))
     pdf.ln()
+    edits_string = ""
     for edit in user.edits:
-        pdf.ln()
         if edit.is_add:
-            pdf.cell(40, 10, "At {0}, User added: {1}".format(edit.time, edit.content))
+            edit_string = "At {0}, User added: {1}\n".format(edit.time, edit.content)
         else:
-            pdf.cell(40, 10, "At {0}, User deleted: {1}".format(edit.time, edit.content))
+            edit_string = "At {0}, User deleted: {1}\n".format(edit.time, edit.content)
+        edits_string += edit_string
+    pdf.multi_cell(0, 10, edits_string)
     pdf_name = user.name + '.pdf'
     pdf.output(pdf_name, 'F')
