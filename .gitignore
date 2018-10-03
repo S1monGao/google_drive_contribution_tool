@@ -1,0 +1,4 @@
+.idea/
+__pycache__/
+*.json
+Sprint 2/web_scrape_product/chromedriver\.exe
