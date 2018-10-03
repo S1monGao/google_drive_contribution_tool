@@ -10,7 +10,7 @@ from plotting_functions import plot_pie_chart, plot_lines, save_all_plots
 import time
 import datetime as dt
 import platform
-from fpdf import FPDF
+from pdf_report import generate_pdf_report
 
 
 def open_version_history():
@@ -168,7 +168,8 @@ def process_content_element(element):
     """
 
     # Remove spaces and split by ";"
-    content = element.text
+    content = "".join(char for char in element.text if ord(char) < 256)
+
     style_string = element.get_attribute('style')
     colour_tuple = get_colour_from_text_style(style_string)
     length = element.size['width']
@@ -223,21 +224,7 @@ if __name__ == '__main__':
     unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
 
     # Open unit_Test_Doc
-    driver.get(unit_test_doc_address)
-
-    """
-    # Input and enter username
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']"))).send_keys(username)
-    driver.find_element_by_xpath("//div[@id='identifierNext']").click()
-    
-    # Wait for password input element to be visible (presence doesnt seem to work here)
-    
-    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@type='password']"))).send_keys(password)
-    
-    # Input and enter password
-    # driver.find_element_by_xpath("//input[@type='password']").send_keys(password)
-    driver.find_element_by_xpath("//div[@id='passwordNext']").click()
-    """
+    driver.get(test_doc_address)
 
     # Ensures Google Docs loads first
     WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
@@ -346,7 +333,7 @@ if __name__ == '__main__':
     figs = [fig1, fig2, fig3, fig4]
     save_all_plots(figs, "graph_summary.pdf")
 
-
+    """
     pdf = FPDF()
     for user in users:
         pdf.add_page()
@@ -357,5 +344,8 @@ if __name__ == '__main__':
         pdf.cell(40, 10, "Number of chars added: {0}".format(user.num_added))
 
     pdf.output('summary.pdf', 'F')
+    """
 
+    for user in users:
+        generate_pdf_report(user)
 
