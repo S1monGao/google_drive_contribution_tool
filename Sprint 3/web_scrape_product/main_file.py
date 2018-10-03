@@ -13,6 +13,7 @@ import platform
 from pdf_report import generate_pdf_report
 
 
+
 def open_version_history():
     """
     Opens version history depending on OS
