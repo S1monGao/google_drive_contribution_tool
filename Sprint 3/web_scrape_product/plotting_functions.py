@@ -3,7 +3,11 @@ from matplotlib.backends.backend_pdf import PdfPages
 import datetime as dt
 
 
-def plot_pie_chart(users, is_additions):
+def get_num_chars_in_time_frame(user, is_additions, start_time, end_time):
+    return sum(edit.num_chars for edit in user.edits if edit.is_add is is_additions and start_time <= edit.time <= end_time)
+
+
+def plot_pie_chart(users, is_additions, start_time, end_time):
     """
     Creates and plots the pie chart
     :param users: A list of User class instances
@@ -12,16 +16,12 @@ def plot_pie_chart(users, is_additions):
     :postcondition: pie chart for number of revisions per user will be plotted
     """
     fig = plt.figure()
-    if is_additions:
-        amounts = [user.num_added for user in users if user.num_added > 0]
-        plt.pie(amounts)
-        plt.title("Number of characters added by users")
-        plt.legend([user.name for user in users if user.num_added > 0])
-    else:
-        amounts = [user.num_deleted for user in users if user.num_deleted > 0]
-        plt.pie(amounts)
-        plt.title("Number of characters deleted by users")
-        plt.legend([user.name for user in users if user.num_deleted > 0])
+    amounts = [get_num_chars_in_time_frame(user, is_additions, start_time, end_time) for user in users]
+    legend_array = [users[i].name for i in range(len(users)) if amounts[i] > 0]
+    amounts = [amount for amount in amounts if amount > 0]
+    plt.pie(amounts, labels=amounts)
+    plt.title("Number of characters added by users")
+    plt.legend(legend_array)
     return fig
 
 

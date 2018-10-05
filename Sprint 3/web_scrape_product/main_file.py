@@ -317,8 +317,8 @@ def generate_all(urls):
 
     # Plotting
 
-    fig1 = plot_pie_chart(users, True)
-    fig2 = plot_pie_chart(users, False)
+    fig1 = plot_pie_chart(users, True, start_time, end_time)
+    fig2 = plot_pie_chart(users, False, start_time, end_time)
     fig3 = plot_lines(users, start_time, end_time, True)
     fig4 = plot_lines(users, start_time, end_time, False)
 
