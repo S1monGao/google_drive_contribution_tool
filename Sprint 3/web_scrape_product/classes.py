@@ -12,11 +12,19 @@ class User:
         self.num_deleted = 0
 
     def add_edit(self, edit):
-        self.edits.append(edit)
+        if len(self.edits) == 0:
+            self.edits.append(edit)
+        else:
+            index_to_add = 0
+            while index_to_add < len(self.edits) and self.edits[index_to_add].time > edit.time:
+                index_to_add += 1
+            self.edits.insert(index_to_add, edit)
         if edit.is_add:
             self.num_added += edit.num_chars
         else:
             self.num_deleted += edit.num_chars
+
+
 
 
 class Edit:
