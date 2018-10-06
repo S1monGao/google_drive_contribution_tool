@@ -1,10 +1,16 @@
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import datetime as dt
+import numpy as np
 
 
 def get_num_chars_in_time_frame(user, is_additions, start_time, end_time):
     return sum(edit.num_chars for edit in user.edits if edit.is_add is is_additions and start_time <= edit.time <= end_time)
+
+
+def func(pct, allvals):
+    absolute = int(pct/100.*np.sum(allvals))
+    return "{:.1f}%\n({:d} chars)".format(pct, absolute)
 
 
 def plot_pie_chart(users, is_additions, start_time, end_time):
@@ -19,7 +25,7 @@ def plot_pie_chart(users, is_additions, start_time, end_time):
     amounts = [get_num_chars_in_time_frame(user, is_additions, start_time, end_time) for user in users]
     legend_array = [users[i].name for i in range(len(users)) if amounts[i] > 0]
     amounts = [amount for amount in amounts if amount > 0]
-    plt.pie(amounts, labels=amounts)
+    plt.pie(amounts, autopct=lambda pct: func(pct, amounts))
     plt.title("Number of characters added by users")
     plt.legend(legend_array)
     return fig

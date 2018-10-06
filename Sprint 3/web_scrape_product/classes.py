@@ -29,7 +29,7 @@ class User:
 
 class Edit:
 
-    def __init__(self, time, content, is_add):
+    def __init__(self, time, content, is_add, file_name):
         """
 
         :param content (String): Characters added/deleted by user (including spaces)
@@ -40,5 +40,6 @@ class Edit:
         self.time = time
         self.is_add = is_add
         self.num_chars = len("".join(content.split()))
+        self.file_name = file_name
 
 

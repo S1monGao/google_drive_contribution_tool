@@ -10,7 +10,7 @@ from plotting_functions import plot_pie_chart, plot_lines, save_all_plots
 import time
 import datetime as dt
 import platform
-from pdf_report import generate_pdf_report
+from pdf_report import generate_pdf_report, generate_pdf_report2
 
 driver = webdriver.Chrome()
 
@@ -193,7 +193,7 @@ def convert_doc_date_to_datetime(doc_date_string):
     return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
 
 
-def generate_all(urls):
+def generate_all(files):
     # Asks user for start andend time
     start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
     end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
@@ -209,14 +209,18 @@ def generate_all(urls):
     test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2vOaz3D4hwX04Hcup29c/edit"
     unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
     users = []
-    for url in urls:
+    for file in files:
         print("----------")
         print("New file")
+
+        file_name = file[0]
+        url = file[1]
+
         # Open unit_Test_Doc
         driver.get(url)
 
         # Ensures Google Docs loads first
-        WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
+        WebDriverWait(driver, 99999).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
 
         open_version_history()
 
@@ -287,7 +291,7 @@ def generate_all(urls):
 
             # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
             for addition in all_additions:
-                edit = Edit(revision_datetime, addition[2], True)
+                edit = Edit(revision_datetime, addition[2], True, file_name)
                 converted_colour = edit_colour_to_user_colour[addition[1]]
                 for user in users:
                     if user.colour == converted_colour:
@@ -295,7 +299,7 @@ def generate_all(urls):
                         break
 
             for deletion in all_deletions:
-                edit = Edit(revision_datetime, deletion[2], False)
+                edit = Edit(revision_datetime, deletion[2], False, file_name)
                 converted_colour = edit_colour_to_user_colour[deletion[1]]
                 for user in users:
                     if user.colour == converted_colour:
@@ -326,7 +330,7 @@ def generate_all(urls):
     save_all_plots(figs, "graph_summary.pdf")
 
     for user in users:
-        generate_pdf_report(user)
+        generate_pdf_report2(user, start_time, end_time)
 
 
 if __name__ == '__main__':
@@ -339,10 +343,12 @@ if __name__ == '__main__':
 
     current_year = "2018"
 
-
     test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2vOaz3D4hwX04Hcup29c/edit"
     unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
     test_doc2_address = "https://docs.google.com/document/d/1QnSjI74Gwx-QsVc7Atm0Q0Dp5T31NOmNZ3xZVAX6HBI/edit"
+
     urls = [unit_test_doc_address, test_doc2_address]
-    generate_all(urls)
+    files = [('unit_test_doc', unit_test_doc_address), ('test_doc2', test_doc2_address)]
+
+    generate_all(files)
     driver.close()
