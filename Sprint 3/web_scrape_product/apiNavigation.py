@@ -51,18 +51,6 @@ def getFolderInTeamDrive(service, folderName, teamDriveName):
 def getFile(fileId, service):
     return service.files().get(fileId=fileId, supportsTeamDrives=True).execute()
 
-def getFilesInFolder(id, service):
-    alist = []
-    filesInFolder = service.children().list(folderId=id, maxResults=1000).execute()
-    # Checking the folder is not empty
-    if filesInFolder['items']:
-        for f in filesInFolder['items']:
-            tmp = getFile(f['id'], service)
-            if "folder" in tmp['mimeType']:
-                alist.extend(getFilesInFolder(tmp['id'], service))
-            elif "google-apps.document" in tmp['mimeType'] or "google-apps.spreadsheet" in tmp['mimeType']:
-                alist.append(tmp)
-    return alist
 
 
 def getTeamDriveId(service, teamDriveName):
@@ -71,18 +59,10 @@ def getTeamDriveId(service, teamDriveName):
         if team['name'] == teamDriveName:
             return team['id']
 
-def getTeamDriveFilesnFolders(service, teamDriveId):
-    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=teamDriveId).execute()['items']
-    fileList = []
-    for file in files:
 
-        # Getting all the docs and sheets
-        if "google-apps.document" in file['mimeType']:
-            fileList.append(file)
 
-        if "folder" in file['mimeType']:
-            fileList.extend(getFilesInFolder(file['id'], service))
-    return fileList
+
+
 
 def convertFilesToUrls(files):
     urls = []
@@ -92,8 +72,110 @@ def convertFilesToUrls(files):
 
 def getFileInTeamDrive(service, fileName, teamDriveName):
     teamDriveId = getTeamDriveId(service, teamDriveName)
-    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=teamDriveId).execute()
-    print(files)
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=teamDriveId).execute()['items']
+    for file in files:
+     print(file['title'])
+
+
+
+
+def listTeamDrives(service):
+    """
+    A Function that lists all of the team drives that the user is a part of
+    :param service: The authenticated google API Service
+    :return: an array with a list of tuples (name, teamDriveId)
+    """
+    list = []
+    teamDrives = service.teamdrives().list().execute()['items']
+    for team in teamDrives:
+        list.append((team['name'],team['id']))
+    return list
+
+def listFoldersInTeamDrive(service, teamDriveId):
+    """
+    A function that gets a list of all the folders that exist within a team drive. This includes sub folders
+    :param service: The authenticated Google API service
+    :param teamDriveId: The id for the target team drive
+    :return: a list of tuples of the form (folderName, folderId)
+    """
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True,
+                                 teamDriveId=teamDriveId).execute()['items']
+    folderList = []
+    for file in files:
+        if "folder" in file['mimeType']:
+            folderList.append((file['title'], file['id']))
+    return folderList
+
+def listDocsInFolder(service, folderId):
+    """
+    A function that lists all the google docs  in a folder,
+    :param service: The authenticated Google API service
+    :param folderId: The Id of the folder that you want the children of
+    :return: a list of tuples in the form (fileName, fileId)
+    """
+    files = service.children().list(folderId=folderId, maxResults=1000).execute()['items']
+    docList = []
+    for file in files:
+        trueFile = service.files().get(fileId=file['id'], supportsTeamDrives= True).execute()
+        if "google-apps.document" in trueFile['mimeType']:
+            docList.append((trueFile['title'], trueFile['id']))
+    return docList
+
+
+def listAllFilesInTeamDrive(service, teamDriveId):
+    """
+    A Function that lists all the files in a teamDrive
+    :param service: The Google API
+    :param teamDriveId: the id of the team drive you want the files of
+    :return: a list of tuples in the form (fileName, fileId)
+    """
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=teamDriveId).execute()['items']
+    fileList = []
+    for file in files:
+
+        # Getting all the docs
+        if "google-apps.document" in file['mimeType']:
+            fileList.append((file['title'], file['id']))
+
+        if "folder" in file['mimeType']:
+            fileList.extend(getFilesInFolder(file['id'], service))
+    return fileList
+
+def getFilesInFolder(id, service):
+    """
+    An auxillary function for listAllFilesInTeamDrive()
+    :param id: folder id
+    :param service: google api service
+    :return: a list of files in the folder and all of its subfolders
+    """
+    alist = []
+    filesInFolder = service.children().list(folderId=id, maxResults=1000).execute()
+    # Checking the folder is not empty
+    if filesInFolder['items']:
+        for f in filesInFolder['items']:
+            tmp = service.files().get(fileId=f['id'], supportsTeamDrives=True).execute()
+            if "folder" in tmp['mimeType']:
+                alist.extend(getFilesInFolder(tmp['id'], service))
+            elif "google-apps.document" in tmp['mimeType']:
+                alist.append((tmp['title'], tmp['id']))
+    return alist
+
+def listDocsNotInAFolder(service, teamDriveId):
+    """
+    A function to get all the files in the root level of a teamDrive
+    :param service: the google API service
+    :param teamDriveId: The Id of the teamDrive
+    :return: a list of tuples in the for (name, id)
+    """
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True,
+                                 teamDriveId=teamDriveId).execute()['items']
+    filelist = []
+    for file in files:
+        if "google-apps.document" in file['mimeType']:
+            filelist.append((file['title'], file['id']))
+    return filelist
+
+
 
 
 def main():
@@ -107,7 +189,7 @@ def main():
     # for i in files:
     #     print(i['title'], i['alternateLink'])
 
-    getFileInTeamDrive(service, "hey", teamDriveName)
+    # getFileInTeamDrive(service, "hey", teamDriveName)
 
     """
     # GET A FOLDER WITHIN A TEAM DRIVE
@@ -131,7 +213,21 @@ def main():
     # urls = convertFilesToUrls(folderFiles)
     # print(urls)
     """
+    teamDrives = listTeamDrives(service)
+    print(teamDrives, "\n")
 
+    folderList = listFoldersInTeamDrive(service, "0ABWpUQItOU0xUk9PVA")
+    print(folderList)
+    print("\n")
+
+    files = listDocsNotInAFolder(service, "0ABWpUQItOU0xUk9PVA")
+    print(files)
+
+    # inFolder = listDocsInFolder(service, "1JV2zn6owERSviN2_zbzW_WQiq_bj9bZq")
+    # print(inFolder)
+    #
+    # allteamdrivefiles = listAllFilesInTeamDrive(service, "0ABWpUQItOU0xUk9PVA")
+    # print("\n\n\n", allteamdrivefiles)
 
 
 
