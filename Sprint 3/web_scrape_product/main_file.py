@@ -15,6 +15,7 @@ from pdf_report import generate_pdf_report, generate_pdf_report2
 
 
 
+
 def open_version_history():
     """
     Opens version history depending on OS
