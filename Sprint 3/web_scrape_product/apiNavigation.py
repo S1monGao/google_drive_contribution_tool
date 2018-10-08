@@ -77,7 +77,7 @@ def getTeamDriveFilesnFolders(service, teamDriveId):
     for file in files:
 
         # Getting all the docs and sheets
-        if "google-apps.document" in file['mimeType'] or "google-apps.spreadsheet" in file['mimeType']:
+        if "google-apps.document" in file['mimeType']:
             fileList.append(file)
 
         if "folder" in file['mimeType']:
@@ -89,6 +89,11 @@ def convertFilesToUrls(files):
     for file in files:
         urls.append(file['alternateLink'])
     return urls
+
+def getFileInTeamDrive(service, fileName, teamDriveName):
+    teamDriveId = getTeamDriveId(service, teamDriveName)
+    files = service.files().list(corpora="teamDrive", includeTeamDriveItems=True, supportsTeamDrives=True, teamDriveId=teamDriveId).execute()
+    print(files)
 
 
 def main():
@@ -102,9 +107,11 @@ def main():
     # for i in files:
     #     print(i['title'], i['alternateLink'])
 
+    getFileInTeamDrive(service, "hey", teamDriveName)
 
-
+    """
     # GET A FOLDER WITHIN A TEAM DRIVE
+    # FolderName => 
     folderName = "Assignment 1"
     folder = getFolderInTeamDrive(service, folderName, teamDriveName)
     folderFiles = getFilesInFolder(folder['id'],service)
@@ -123,6 +130,7 @@ def main():
 
     # urls = convertFilesToUrls(folderFiles)
     # print(urls)
+    """
 
 
 
