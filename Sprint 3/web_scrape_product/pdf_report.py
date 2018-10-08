@@ -62,7 +62,7 @@ def generate_pdf_report2(user, start_time, end_time):
     # evenly across table and page
     col_width = epw / 3
 
-    data = [get_row(edit) for edit in user.edits]
+    data = [get_row(edit) for edit in user.edits if start_time <= edit.time <= end_time]
     # Document title centered, 'B'old, 14 pt
     pdf.set_font('Arial', 'B', 16.0)
     pdf.multi_cell(epw, 0.0, user.name)

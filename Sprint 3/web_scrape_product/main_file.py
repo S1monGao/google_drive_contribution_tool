@@ -12,7 +12,7 @@ import datetime as dt
 import platform
 from pdf_report import generate_pdf_report, generate_pdf_report2
 
-driver = webdriver.Chrome()
+
 
 
 def open_version_history():
@@ -193,10 +193,8 @@ def convert_doc_date_to_datetime(doc_date_string):
     return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
 
 
-def generate_all(files):
-    # Asks user for start andend time
-    start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
-    end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
+def generate_all(files, start_time, end_time):
+
 
     # Ensures that the user specified times are valid
     while start_time > end_time:
@@ -334,6 +332,7 @@ def generate_all(files):
 
 
 if __name__ == '__main__':
+
     # Create dictionary to convert from colour of edit to colour of user
     edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179),
                     (69, 90, 100)]
@@ -350,5 +349,9 @@ if __name__ == '__main__':
     urls = [unit_test_doc_address, test_doc2_address]
     files = [('unit_test_doc', unit_test_doc_address), ('test_doc2', test_doc2_address)]
 
-    generate_all(files)
+    start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
+    end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
+
+    driver = webdriver.Chrome()
+    generate_all(files, start_time, end_time)
     driver.close()
