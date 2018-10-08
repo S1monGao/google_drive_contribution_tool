@@ -12,16 +12,24 @@ class User:
         self.num_deleted = 0
 
     def add_edit(self, edit):
-        self.edits.append(edit)
+        if len(self.edits) == 0:
+            self.edits.append(edit)
+        else:
+            index_to_add = 0
+            while index_to_add < len(self.edits) and self.edits[index_to_add].time > edit.time:
+                index_to_add += 1
+            self.edits.insert(index_to_add, edit)
         if edit.is_add:
             self.num_added += edit.num_chars
         else:
             self.num_deleted += edit.num_chars
 
 
+
+
 class Edit:
 
-    def __init__(self, time, content, is_add):
+    def __init__(self, time, content, is_add, file_name):
         """
 
         :param content (String): Characters added/deleted by user (including spaces)
@@ -32,5 +40,6 @@ class Edit:
         self.time = time
         self.is_add = is_add
         self.num_chars = len("".join(content.split()))
+        self.file_name = file_name
 
 
