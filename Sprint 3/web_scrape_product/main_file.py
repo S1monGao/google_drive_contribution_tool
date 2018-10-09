@@ -16,7 +16,7 @@ from pdf_report import generate_pdf_report, generate_pdf_report2
 
 
 
-def open_version_history():
+def open_version_history(driver):
     """
     Opens version history depending on OS
     :precondition: The relevant google doc should be open
@@ -179,7 +179,7 @@ def process_content_element(element):
     return (length, colour_tuple, content)
 
 
-def convert_doc_date_to_datetime(doc_date_string):
+def convert_doc_date_to_datetime(doc_date_string,current_year):
     """
     Converts datetime string from Google Docs HTML to datetime object
     :param doc_date_string: String of date and time of revision from Google Docs
@@ -195,7 +195,16 @@ def convert_doc_date_to_datetime(doc_date_string):
 
 
 def generate_all(files, start_time, end_time):
+    current_year="2018"
+    # Create dictionary to convert from colour of edit to colour of user
+    edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179),
+                    (69, 90, 100)]
+    user_colours = [(93, 64, 55), (38, 166, 154), (245, 124, 0), (103, 58, 183), (216, 27, 96), (3, 169, 244),
+                    (84, 110, 122)]
+    edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
+
+    driver = webdriver.Chrome()
 
     # Ensures that the user specified times are valid
     while start_time > end_time:
@@ -217,11 +226,12 @@ def generate_all(files, start_time, end_time):
 
         # Open unit_Test_Doc
         driver.get(url)
+        driver.get(url)
 
         # Ensures Google Docs loads first
         WebDriverWait(driver, 99999).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
 
-        open_version_history()
+        open_version_history(driver)
 
         # Sleep again to make sure it has time to load version history
         time.sleep(3)
@@ -239,7 +249,7 @@ def generate_all(files, start_time, end_time):
             pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
             revision_datetime_string = revision.find_element_by_xpath(
                 './/textarea[contains(@class, "docs-revisions-tile-text-box")]').text
-            revision_datetime = convert_doc_date_to_datetime(revision_datetime_string)
+            revision_datetime = convert_doc_date_to_datetime(revision_datetime_string,current_year)
 
             # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
             first_page_index = len(pages) // 2
@@ -331,17 +341,10 @@ def generate_all(files, start_time, end_time):
     for user in users:
         generate_pdf_report2(user, start_time, end_time)
 
+    driver.close()
 
 if __name__ == '__main__':
 
-    # Create dictionary to convert from colour of edit to colour of user
-    edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179),
-                    (69, 90, 100)]
-    user_colours = [(93, 64, 55), (38, 166, 154), (245, 124, 0), (103, 58, 183), (216, 27, 96), (3, 169, 244),
-                    (84, 110, 122)]
-    edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
-
-    current_year = "2018"
 
     test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2vOaz3D4hwX04Hcup29c/edit"
     unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
@@ -353,6 +356,5 @@ if __name__ == '__main__':
     start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
     end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
 
-    driver = webdriver.Chrome()
+
     generate_all(files, start_time, end_time)
-    driver.close()
