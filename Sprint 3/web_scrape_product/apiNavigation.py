@@ -64,10 +64,11 @@ def getTeamDriveId(service, teamDriveName):
 
 
 
-def convertFilesToUrls(files):
+def convertFilesToUrls(files, service):
     urls = []
-    for file in files:
-        urls.append(file['alternateLink'])
+    for tuple in files:
+        tmp = getFile(tuple[1], service)
+        urls.append((tmp['title'], tmp['alternateLink']))
     return urls
 
 def getFileInTeamDrive(service, fileName, teamDriveName):
@@ -220,14 +221,14 @@ def main():
     print(folderList)
     print("\n")
 
-    files = listDocsNotInAFolder(service, "0ABWpUQItOU0xUk9PVA")
-    print(files)
+    #files = listDocsNotInAFolder(service, "0ABWpUQItOU0xUk9PVA")
+    #print(files)
 
     # inFolder = listDocsInFolder(service, "1JV2zn6owERSviN2_zbzW_WQiq_bj9bZq")
     # print(inFolder)
     #
-    # allteamdrivefiles = listAllFilesInTeamDrive(service, "0ABWpUQItOU0xUk9PVA")
-    # print("\n\n\n", allteamdrivefiles)
+    allteamdrivefiles = listAllFilesInTeamDrive(service, "0ABWpUQItOU0xUk9PVA")
+    print("\n\n\n", allteamdrivefiles)
 
 
 
