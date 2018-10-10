@@ -44,6 +44,8 @@ def teamSelect():
     for i in displayFiles:
         fileList.insert(END,i[0]+", "+i[1])
 
+
+
 def folderOnselect(evt):
     selection = evt.widget
     index = int(selection.curselection()[0])
@@ -53,6 +55,7 @@ def folderOnselect(evt):
     currentChoice = value
 
 def folderSelect():
+
     value = currentChoice
     filesSelected = getFilesInFolder(value[1], service)
     global chosenFiles
@@ -62,6 +65,8 @@ def folderSelect():
     fileList.delete(0, END)
     for i in chosenFiles:
         fileList.insert(END, i[0] + ", " + i[1])
+
+
 
 
 def fileOnselect(evt):
@@ -77,6 +82,8 @@ def fileSelect():
     value = currentChoice
     global chosenFiles
     chosenFiles = [(value[0], value[1])]
+
+
 
 def click():
     try:
@@ -156,34 +163,36 @@ fileList.bind('<<ListboxSelect>>', fileOnselect)
 
 
 #Time boxes
-Label(window, text="Time (dd/mm/yyyy)", height=3, bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=6,column=0,columnspan=5,sticky=S)
+Label(window, text="Time (dd/mm/yyyy)", height=3, bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=8,column=0,columnspan=5,sticky=S)
 
 time1=Entry(window, width=20, bg="white")
-time1.grid(row=7, column=1, sticky=E)
+time1.grid(row=9, column=1, sticky=E)
 
 time2=Entry(window, width=20, bg="white")
-time2.grid(row=7, column=3, sticky=W)
+time2.grid(row=9, column=3, sticky=W)
 
 
 #nothing
-Label(window, text="",bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=8,column=0,columnspan=5)
+Label(window, text="",bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=10,column=0,columnspan=5)
 
 #generate button
 
 
-Button(window,text="Generate",width=20, command=click).grid(row=9,column=2)
+Button(window,text="Generate",width=20, command=click).grid(row=11,column=2)
 
 #nothing
-Label(window, text="",bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=11,column=0,columnspan=5)
+Label(window, text="",bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=12,column=0,columnspan=5)
 
 #Error output
 output = Text(window, bg="grey39", fg="red", font="none 12 bold", width=80, height=1, bd=0)
-output.grid(row=11,column=0,columnspan=5)
+output.grid(row=13,column=0,columnspan=5)
 
+#nothing
+Label(window, text="",bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=6,column=0,columnspan=5)
 
-Button(window,text="Select Team Drive",width=20, command=teamSelect).grid(row=12,column=1)
-Button(window,text="Select Folder",width=20, command=folderSelect).grid(row=12,column=2)
-Button(window,text="Select File",width=20, command=fileSelect).grid(row=12,column=3)
+Button(window,text="Select Team Drive",width=20, command=teamSelect).grid(row=7,column=1)
+Button(window,text="Select Folder",width=20, command=folderSelect).grid(row=7,column=2)
+Button(window,text="Select File",width=20, command=fileSelect).grid(row=7,column=3)
 #window.pack()
 #frame.pack()
 window.mainloop()
