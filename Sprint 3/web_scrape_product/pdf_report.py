@@ -87,8 +87,8 @@ def generate_pdf_report2(user, start_time, end_time):
     # Describe format of edit
     pdf.set_font('Arial', 'I', 12.0)
     pdf.cell(col_width, 2 * th, "Date and time", border=1)
-    pdf.cell(col_width, 2 * th, "File name", border=1)
-    pdf.cell(col_width, 2 * th, "Addition/Deletion", border=1)
+    pdf.cell(col_width * 1.5, 2 * th, "File name", border=1)
+    pdf.cell(col_width * 0.5, 2 * th, "Addition/Deletion", border=1)
     pdf.ln(2 * th)
     pdf.cell(0, 2 * th, "Content of edit", border=1)
 
@@ -101,12 +101,10 @@ def generate_pdf_report2(user, start_time, end_time):
     for row in data:
         if pdf.h - pdf.y < pdf.b_margin + 4 * th:
             pdf.add_page()
-        for datum in row[:3]:
-            # Enter data in colums
-            # Notice the use of the function str to coerce any input to the
-            # string type. This is needed
-            # since pyFPDF expects a string, not a number.
-            pdf.cell(col_width, 2 * th, str(datum), border=1)
+
+        pdf.cell(col_width, 2 * th, str(row[0]), border=1)
+        pdf.cell(col_width * 1.5, 2 * th, str(row[1]), border=1)
+        pdf.cell(col_width * 0.5, 2 * th, str(row[2]), border=1)
         pdf.ln(2 * th)
         pdf.multi_cell(0, 2 * th, str(row[3]), border=1)
 

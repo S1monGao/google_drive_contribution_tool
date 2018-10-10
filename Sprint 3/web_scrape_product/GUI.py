@@ -38,10 +38,17 @@ def teamSelect():
         folderList.insert(END,i[0]+", "+i[1])
 
 
+    fileList.delete(0, END)
+    displayFiles=listDocsNotInAFolder(service, value[1])
+    displayFiles = convertFilesToUrls(displayFiles, service)
+    for i in displayFiles:
+        fileList.insert(END,i[0]+", "+i[1])
+
 def folderOnselect(evt):
     selection = evt.widget
     index = int(selection.curselection()[0])
     value = selection.get(index)
+    value=value.split(', ')
     global currentChoice
     currentChoice = value
 
@@ -51,9 +58,10 @@ def folderSelect():
     global chosenFiles
     chosenFiles = []
     chosenFiles = convertFilesToUrls(filesSelected, service)
+    print (chosenFiles)
     fileList.delete(0, END)
     for i in chosenFiles:
-        folderList.insert(END, i[0] + ", " + i[1])
+        fileList.insert(END, i[0] + ", " + i[1])
 
 
 def fileOnselect(evt):
@@ -133,7 +141,6 @@ Label(window, text="Folder Selector",  bg="grey39", fg="white", font="none 12 bo
 
 folderList=Listbox(window, width=100, height=5)
 folderList.grid(row=3, column=0, columnspan=5)
-folderList.insert(END,"Folder")
 folderList.bind('<<ListboxSelect>>', folderOnselect)
 
 
@@ -142,7 +149,6 @@ Label(window, text="File Selector",  bg="grey39", fg="white", font="none 12 bold
 
 fileList=Listbox(window, width=100, height=5)
 fileList.grid(row=5, column=0, columnspan=5)
-fileList.insert(END,"test_doc2, https://docs.google.com/document/d/1QnSjI74Gwx-QsVc7Atm0Q0Dp5T31NOmNZ3xZVAX6HBI/edit")
 fileList.bind('<<ListboxSelect>>', fileOnselect)
 
 

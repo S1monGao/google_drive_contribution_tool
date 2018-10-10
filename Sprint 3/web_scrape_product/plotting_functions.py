@@ -26,7 +26,10 @@ def plot_pie_chart(users, is_additions, start_time, end_time):
     legend_array = [users[i].name for i in range(len(users)) if amounts[i] > 0]
     amounts = [amount for amount in amounts if amount > 0]
     plt.pie(amounts, autopct=lambda pct: func(pct, amounts))
-    plt.title("Number of characters added by users")
+    if is_additions:
+        plt.title("Number of characters added by users")
+    else:
+        plt.title("Number of characters deleted by users")
     plt.legend(legend_array)
     return fig
 
