@@ -16,6 +16,22 @@ def authenticate():
     return service
 
 
+def listFolders(service):
+    """
+    gets all the files in the google drive that are google docs or sheets and returns a list of them
+    It only searches the first 1000 files
+    :param service: Google Drive rest service
+    :return: a list of file metadata objects that are either docs or sheets
+    """
+
+    files = service.files().list(maxResults=1000).execute()
+    tmp = []
+    # print file name for every google doc and sheet
+    for f in files['items']:
+        if "folder" in f['mimeType']:
+            tmp.append((f['title'], f['id']))
+    return tmp
+
 def listFiles(service):
     """
     gets all the files in the google drive that are google docs or sheets and returns a list of them
@@ -28,8 +44,8 @@ def listFiles(service):
     tmp = []
     # print file name for every google doc and sheet
     for f in files['items']:
-        if "google-apps.document" in f['mimeType'] or "google-apps.spreadsheet" in f['mimeType'] or "folder" in f['mimeType']:
-            tmp.append(f)
+        if "google-apps.document" in f['mimeType']:
+            tmp.append((f['title'], f['alternateLink']))
     return tmp
 
 def getFileInfo(fileName, files):
@@ -141,6 +157,7 @@ def listAllFilesInTeamDrive(service, teamDriveId):
         if "folder" in file['mimeType']:
             fileList.extend(getFilesInFolder(file['id'], service))
     return fileList
+
 
 def getFilesInFolder(id, service):
     """

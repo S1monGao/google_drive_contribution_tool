@@ -149,7 +149,9 @@ Label(window, text="Folder Selector",  bg="grey39", fg="white", font="none 12 bo
 folderList=Listbox(window, width=100, height=5)
 folderList.grid(row=3, column=0, columnspan=5)
 folderList.bind('<<ListboxSelect>>', folderOnselect)
-
+listOfFolders=listFolders(service)
+for i in listOfFolders:
+    folderList.insert(END,i[0]+', '+i[1])
 
 Label(window, text="File Selector",  bg="grey39", fg="white", font="none 12 bold", width=80).grid(row=4,column=0, columnspan=5)
 
@@ -157,7 +159,9 @@ Label(window, text="File Selector",  bg="grey39", fg="white", font="none 12 bold
 fileList=Listbox(window, width=100, height=5)
 fileList.grid(row=5, column=0, columnspan=5)
 fileList.bind('<<ListboxSelect>>', fileOnselect)
-
+listOfFiles=listFiles(service)
+for i in listOfFiles:
+    fileList.insert(END,i[0]+', '+i[1])
 
 
 
