@@ -305,19 +305,26 @@ def generate_all(files, start_time, end_time):
             # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
             for addition in all_additions:
                 edit = Edit(revision_datetime, addition[2], True, file_name)
-                converted_colour = edit_colour_to_user_colour[addition[1]]
-                for user in users:
-                    if user.colour == converted_colour:
-                        user.add_edit(edit)
-                        break
+                try:
+                    converted_colour = edit_colour_to_user_colour[addition[1]]
+                    for user in users:
+                        if user.colour == converted_colour:
+                            user.add_edit(edit)
+                            break
+                except:
+                    pass
+
 
             for deletion in all_deletions:
                 edit = Edit(revision_datetime, deletion[2], False, file_name)
-                converted_colour = edit_colour_to_user_colour[deletion[1]]
-                for user in users:
-                    if user.colour == converted_colour:
-                        user.add_edit(edit)
-                        break
+                try:
+                    converted_colour = edit_colour_to_user_colour[deletion[1]]
+                    for user in users:
+                        if user.colour == converted_colour:
+                            user.add_edit(edit)
+                            break
+                except:
+                    pass
 
         for user in users:
             print("Name: {0}".format(user.name))
