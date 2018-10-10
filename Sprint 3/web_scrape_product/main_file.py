@@ -191,7 +191,11 @@ def convert_doc_date_to_datetime(doc_date_string,current_year):
     if num_commas == 1:
         index_first_comma = doc_date_string.index(",")
         doc_date_string = doc_date_string[:index_first_comma + 1] + " " + current_year + "," + doc_date_string[index_first_comma + 1:]
-    return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
+    try:
+        date_to_return = dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
+    except ValueError:
+        date_to_return = dt.datetime.strptime(doc_date_string, '%d %B, %Y, %H:%M')
+    return date_to_return
 
 
 def generate_all(files, start_time, end_time):

@@ -26,23 +26,34 @@ def teamOnselect(evt):
     global currentChoice
     currentChoice=value
 
-
 def teamSelect():
     value=currentChoice
     filesSelected = listAllFilesInTeamDrive(service, value[1])
     global chosenFiles
     chosenFiles = []
     chosenFiles = convertFilesToUrls(filesSelected, service)
-    print(chosenFiles)
-    # for i in filesSelected:
-    #     # chosenFiles.append((i[0],'https://docs.google.com/document/d/'+i[1]+'/edit'))
-    #     chosenFiles.append()
+    folderList.delete(0,END)
+    folders=listFoldersInTeamDrive(service, value[1])
+    for i in folders:
+        folderList.insert(END,i[0]+", "+i[1])
 
 
 def folderOnselect(evt):
     selection = evt.widget
     index = int(selection.curselection()[0])
     value = selection.get(index)
+    global currentChoice
+    currentChoice = value
+
+def folderSelect():
+    value = currentChoice
+    filesSelected = getFilesInFolder(value[1], service)
+    global chosenFiles
+    chosenFiles = []
+    chosenFiles = convertFilesToUrls(filesSelected, service)
+    fileList.delete(0, END)
+    for i in chosenFiles:
+        folderList.insert(END, i[0] + ", " + i[1])
 
 
 def fileOnselect(evt):
@@ -50,10 +61,14 @@ def fileOnselect(evt):
     index = int(selection.curselection()[0])
     value = selection.get(index)
     value=value.split(', ')
+    global currentChoice
+    currentChoice = value
+
+def fileSelect():
+    global currentChoice
+    value = currentChoice
     global chosenFiles
-    chosenFiles= [(value[0],value[1])]
-
-
+    chosenFiles = [(value[0], value[1])]
 
 def click():
     try:
@@ -161,8 +176,8 @@ output.grid(row=11,column=0,columnspan=5)
 
 
 Button(window,text="Select Team Drive",width=20, command=teamSelect).grid(row=12,column=1)
-Button(window,text="Select Folder",width=20, command=click).grid(row=12,column=2)
-Button(window,text="Select File",width=20, command=click).grid(row=12,column=3)
+Button(window,text="Select Folder",width=20, command=folderSelect).grid(row=12,column=2)
+Button(window,text="Select File",width=20, command=fileSelect).grid(row=12,column=3)
 #window.pack()
 #frame.pack()
 window.mainloop()
