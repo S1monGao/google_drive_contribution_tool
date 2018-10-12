@@ -10,10 +10,13 @@ from plotting_functions import plot_pie_chart, plot_lines, save_all_plots
 import time
 import datetime as dt
 import platform
-from fpdf import FPDF
+from pdf_report import generate_pdf_report, generate_pdf_report2
 
 
-def open_version_history():
+
+
+
+def open_version_history(driver):
     """
     Opens version history depending on OS
     :precondition: The relevant google doc should be open
@@ -168,14 +171,15 @@ def process_content_element(element):
     """
 
     # Remove spaces and split by ";"
-    content = element.text
+    content = "".join(char for char in element.text if ord(char) < 256)
+
     style_string = element.get_attribute('style')
     colour_tuple = get_colour_from_text_style(style_string)
     length = element.size['width']
     return (length, colour_tuple, content)
 
 
-def convert_doc_date_to_datetime(doc_date_string):
+def convert_doc_date_to_datetime(doc_date_string,current_year):
     """
     Converts datetime string from Google Docs HTML to datetime object
     :param doc_date_string: String of date and time of revision from Google Docs
@@ -187,175 +191,181 @@ def convert_doc_date_to_datetime(doc_date_string):
     if num_commas == 1:
         index_first_comma = doc_date_string.index(",")
         doc_date_string = doc_date_string[:index_first_comma + 1] + " " + current_year + "," + doc_date_string[index_first_comma + 1:]
-    return dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
+    try:
+        date_to_return = dt.datetime.strptime(doc_date_string, '%B %d, %Y, %I:%M %p')
+    except ValueError:
+        date_to_return = dt.datetime.strptime(doc_date_string, '%d %B, %Y, %H:%M')
+    return date_to_return
 
 
-
-
-
-if __name__ == '__main__':
-
+def generate_all(files, start_time, end_time):
+    current_year="2018"
     # Create dictionary to convert from colour of edit to colour of user
-    edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179), (69, 90, 100)]
-    user_colours = [(93, 64, 55), (38, 166, 154), (245, 124,0), (103, 58, 183), (216, 27, 96), (3, 169, 244), (84, 110, 122)]
+    edit_colours = [(121, 85, 72), (0, 121, 107), (198, 69, 0), (81, 45, 168), (194, 24, 91), (6, 116, 179),
+                    (69, 90, 100)]
+    user_colours = [(93, 64, 55), (38, 166, 154), (245, 124, 0), (103, 58, 183), (216, 27, 96), (3, 169, 244),
+                    (84, 110, 122)]
     edit_colour_to_user_colour = dict(zip(edit_colours, user_colours))
 
 
-    current_year = "2018"
+    driver = webdriver.Chrome()
 
-    #Asks user for start andend time
-    start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
-    end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ir 4/7/2016: "), '%d/%m/%Y')
-
-    #Ensures that the user specified times are valid
+    # Ensures that the user specified times are valid
     while start_time > end_time:
         print("Invalid Dates detected\n Please enter a start time before the end time\n")
         start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
         end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ir 4/7/2016: "), '%d/%m/%Y')
 
-    # username = input("Enter user_name: ")
-    # password = input("Enter password: ")
-
     # Create a webdriver for scraping
-    driver = webdriver.Chrome()
 
     test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2vOaz3D4hwX04Hcup29c/edit"
     unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
-
-    # Open unit_Test_Doc
-    driver.get(unit_test_doc_address)
-
-    """
-    # Input and enter username
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//input[@type='email']"))).send_keys(username)
-    driver.find_element_by_xpath("//div[@id='identifierNext']").click()
-    
-    # Wait for password input element to be visible (presence doesnt seem to work here)
-    
-    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@type='password']"))).send_keys(password)
-    
-    # Input and enter password
-    # driver.find_element_by_xpath("//input[@type='password']").send_keys(password)
-    driver.find_element_by_xpath("//div[@id='passwordNext']").click()
-    """
-
-    # Ensures Google Docs loads first
-    WebDriverWait(driver, 300).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
-
-    open_version_history()
-
-    # Will store all User class instances
     users = []
+    for file in files:
+        print("----------")
+        print("New file")
 
-    # Sleep again to make sure it has time to load version history
-    time.sleep(3)
+        file_name = file[0]
+        url = file[1]
 
-    # Find revisions from side bar
-    all_revisions_on_page = driver.find_elements_by_xpath('//div[@class="docs-revisions-collapsible-pane-milestone-tile-container"]')
+        # Open unit_Test_Doc
+        driver.get(url)
+        driver.get(url)
 
-    for revision in all_revisions_on_page:
-        # click on revision
-        revision.click()
-        # Give time for content to load
+        # Ensures Google Docs loads first
+        WebDriverWait(driver, 99999).until(EC.presence_of_element_located((By.XPATH, "//div[@role='tablist']")))
+
+        open_version_history(driver)
+
+        # Sleep again to make sure it has time to load version history
         time.sleep(3)
 
-        pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
-        revision_datetime_string = revision.find_element_by_xpath('.//textarea[contains(@class, "docs-revisions-tile-text-box")]').text
-        revision_datetime = convert_doc_date_to_datetime(revision_datetime_string)
+        # Find revisions from side bar
+        all_revisions_on_page = driver.find_elements_by_xpath(
+            '//div[@class="docs-revisions-collapsible-pane-milestone-tile-container"]')
 
-        # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
-        first_page_index = len(pages) // 2
-        pages = pages[first_page_index:]
-
-        all_additions = []
-        all_deletions = []
-
-        for i in range(len(pages)):
-            page = pages[i]
-
-            # We have to go to each page and stay there for the DOM to load to get all the content on the page
+        for revision in all_revisions_on_page:
+            # click on revision
+            revision.click()
+            # Give time for content to load
             time.sleep(3)
-            ActionChains(driver).move_to_element(page).perform()
 
-            # Get all the lines on the page
-            all_paragraphs = page.find_elements_by_xpath('.//div[contains(@class, "kix-paragraphrenderer")]')
+            pages = driver.find_elements_by_xpath('//div[contains(@class, "kix-page-content-wrapper")]')
+            revision_datetime_string = revision.find_element_by_xpath(
+                './/textarea[contains(@class, "docs-revisions-tile-text-box")]').text
+            revision_datetime = convert_doc_date_to_datetime(revision_datetime_string,current_year)
 
-            for paragraph in all_paragraphs:
-                decoration_elements, content_elements = get_decorations_and_contents(paragraph)
-                processed_decorations = [process_decoration_element(element) for element in decoration_elements]
-                processed_contents = [process_content_element(element) for element in content_elements]
-                paragraph_additions, paragraph_deletions = get_paragraph_additions_and_deletions(processed_decorations, processed_contents)
-                all_additions += paragraph_additions
-                all_deletions += paragraph_deletions
-        print("Additions: {0}".format(all_additions))
-        print("Deletions: {0}".format(all_deletions))
-        print("-----------")
-        user_tuples = get_users_and_colours(revision)
+            # The first half of pages are not pages that we want. Only the second half is needed (not really sure why)
+            first_page_index = len(pages) // 2
+            pages = pages[first_page_index:]
 
-        # Adding new User class instances to users array if needed
+            all_additions = []
+            all_deletions = []
 
-        # Every user tuple is in the form (name_string, colour_3_tuple)
-        for user_tuple in user_tuples:
-            user_found = False
-            for user_instance in users:
-                # Compare by colour not name as users may have same name
-                if user_tuple[1] == user_instance.colour:
-                    user_found = True
-            if not user_found:
-                users.append(User(user_tuple[0], user_tuple[1]))
+            for i in range(len(pages)):
+                page = pages[i]
 
-        # Adding additions/deletions to each User class instance
+                # We have to go to each page and stay there for the DOM to load to get all the content on the page
+                time.sleep(3)
+                ActionChains(driver).move_to_element(page).perform()
 
-        # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
-        for addition in all_additions:
-            edit = Edit(revision_datetime, addition[2], True)
-            converted_colour = edit_colour_to_user_colour[addition[1]]
-            for user in users:
-                if user.colour == converted_colour:
-                    user.add_edit(edit)
-                    break
+                # Get all the lines on the page
+                all_paragraphs = page.find_elements_by_xpath('.//div[contains(@class, "kix-paragraphrenderer")]')
 
-        for deletion in all_deletions:
-            edit = Edit(revision_datetime, deletion[2], False)
-            converted_colour = edit_colour_to_user_colour[deletion[1]]
-            for user in users:
-                if user.colour == converted_colour:
-                    user.add_edit(edit)
-                    break
+                for paragraph in all_paragraphs:
+                    decoration_elements, content_elements = get_decorations_and_contents(paragraph)
+                    processed_decorations = [process_decoration_element(element) for element in decoration_elements]
+                    processed_contents = [process_content_element(element) for element in content_elements]
+                    paragraph_additions, paragraph_deletions = get_paragraph_additions_and_deletions(processed_decorations,
+                                                                                                     processed_contents)
+                    all_additions += paragraph_additions
+                    all_deletions += paragraph_deletions
+            print("Additions: {0}".format(all_additions))
+            print("Deletions: {0}".format(all_deletions))
+            print("-----------")
+            user_tuples = get_users_and_colours(revision)
 
-    for user in users:
-        print("Name: {0}".format(user.name))
-        print("Num_added: {0}".format(str(user.num_added)))
-        print("Num_deleted: {0}".format(str(user.num_deleted)))
-        print("*************")
+            # Adding new User class instances to users array if needed
 
-    driver.close()
+            # Every user tuple is in the form (name_string, colour_3_tuple)
+            for user_tuple in user_tuples:
+                user_found = False
+                for user_instance in users:
+                    # Compare by name
+                    if user_tuple[0] == user_instance.name:
+                        user_found = True
+                        # change colour to match if looking at different file
+                        if user_instance.colour == (0,0,0):
+                            user_instance.colour = user_tuple[1]
+                if not user_found:
+                    users.append(User(user_tuple[0], user_tuple[1]))
 
-    total_added = sum(user.num_added for user in users)
-    total_deleted = sum(user.num_deleted for user in users)
-    print("Total added: {0}".format(total_added))
-    print("Total deleted: {0}".format(total_deleted))
+            # Adding additions/deletions to each User class instance
+
+            # Every addition/deletion is in the form (width, colour_3_tuple, content_string)
+            for addition in all_additions:
+                edit = Edit(revision_datetime, addition[2], True, file_name)
+                try:
+                    converted_colour = edit_colour_to_user_colour[addition[1]]
+                    for user in users:
+                        if user.colour == converted_colour:
+                            user.add_edit(edit)
+                            break
+                except:
+                    pass
+
+
+            for deletion in all_deletions:
+                edit = Edit(revision_datetime, deletion[2], False, file_name)
+                try:
+                    converted_colour = edit_colour_to_user_colour[deletion[1]]
+                    for user in users:
+                        if user.colour == converted_colour:
+                            user.add_edit(edit)
+                            break
+                except:
+                    pass
+
+        for user in users:
+            print("Name: {0}".format(user.name))
+            print("Num_added: {0}".format(str(user.num_added)))
+            print("Num_deleted: {0}".format(str(user.num_deleted)))
+            print("Num edits: {0}".format(str(len(user.edits))))
+            print("*************")
+            user.colour = (0,0,0)
+
+        total_added = sum(user.num_added for user in users)
+        total_deleted = sum(user.num_deleted for user in users)
+        print("Total added: {0}".format(total_added))
+        print("Total deleted: {0}".format(total_deleted))
 
     # Plotting
 
-    fig1 = plot_pie_chart(users, True)
-    fig2 = plot_pie_chart(users, False)
+    fig1 = plot_pie_chart(users, True, start_time, end_time)
+    fig2 = plot_pie_chart(users, False, start_time, end_time)
     fig3 = plot_lines(users, start_time, end_time, True)
     fig4 = plot_lines(users, start_time, end_time, False)
 
     figs = [fig1, fig2, fig3, fig4]
     save_all_plots(figs, "graph_summary.pdf")
 
-
-    pdf = FPDF()
     for user in users:
-        pdf.add_page()
-        pdf.set_font('Arial', 'B', 16)
-        pdf.cell(40, 10, user.name)
-        pdf.ln()
-        pdf.set_font('Arial', '', 12)
-        pdf.cell(40, 10, "Number of chars added: {0}".format(user.num_added))
+        generate_pdf_report2(user, start_time, end_time)
 
-    pdf.output('summary.pdf', 'F')
+    driver.close()
+
+if __name__ == '__main__':
 
 
+    test_doc_address = "https://docs.google.com/document/d/1M0wxSlTC2x_2xep7VE2IbId2vOaz3D4hwX04Hcup29c/edit"
+    unit_test_doc_address = 'https://docs.google.com/document/d/1TyFzFJ5F3e3JL9uFXr8pB58uGEMFlreZoqxNrR0V7NA/edit'
+    test_doc2_address = "https://docs.google.com/document/d/1QnSjI74Gwx-QsVc7Atm0Q0Dp5T31NOmNZ3xZVAX6HBI/edit"
+
+    urls = [unit_test_doc_address, test_doc2_address]
+    files = [('unit_test_doc', unit_test_doc_address), ('test_doc2', test_doc2_address)]
+
+    start_time = dt.datetime.strptime(input("Enter a start time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
+    end_time = dt.datetime.strptime(input("Enter an end time in Date/Time format: ie 4/7/2016: "), '%d/%m/%Y')
+
+
+    generate_all(files, start_time, end_time)
